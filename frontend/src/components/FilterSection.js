@@ -120,7 +120,7 @@ const FilterSection = ({ filters, onFilterChange }) => {
       </div>
 
       {/* Model Filter */}
-      {models.length > 1 && filters.category !== 'accesorio' && (
+      {models.length > 1 && (
         <div className="filter-group">
           <label className="filter-label">Modelo</label>
           <div className="filter-options">
@@ -139,7 +139,7 @@ const FilterSection = ({ filters, onFilterChange }) => {
       )}
 
       {/* Type Filter */}
-      {types.length > 1 && filters.category !== 'ipad' && (
+      {types.length > 1 && (
         <div className="filter-group">
           <label className="filter-label">Tipo</label>
           <div className="filter-options">

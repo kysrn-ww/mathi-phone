@@ -2,31 +2,18 @@ import axios from 'axios';
 
 // Detectar automáticamente la URL del backend
 const getBackendUrl = () => {
-  const hostname = window.location.hostname;
-  const port = window.location.port;
-
-  // Si estamos en producción en Render
-  if (hostname.includes('onrender.com')) {
-    // Si es el servicio de frontend (mathi-phone), el backend está en mathi-api
-    if (hostname.includes('mathi-phone')) {
-      return 'https://mathi-api.onrender.com';
-    }
-    // En cualquier otro caso en render, usar el mismo origen
+  // Si estamos en producción en Render, usar el mismo origen (despliegue unificado)
+  if (window.location.hostname.includes('onrender.com')) {
     return window.location.origin;
   }
 
-  // Si estamos en localhost
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:8001';
+  // Si hay configuración global (para ngrok)
+  if (window.APP_CONFIG && window.APP_CONFIG.getBackendUrl) {
+    return window.APP_CONFIG.getBackendUrl();
   }
 
-  // Si estamos en ngrok
-  if (hostname.includes('ngrok') || hostname.includes('ngrok-free')) {
-    return 'http://localhost:8001';
-  }
-
-  // Fallback a variables de entorno o puerto 8001 en la misma IP
-  return process.env.REACT_APP_BACKEND_URL || `${window.location.protocol}//${hostname}:8001`;
+  // Fallback a variables de entorno
+  return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 };
 
 const BACKEND_URL = getBackendUrl();
@@ -86,15 +73,10 @@ export const api = {
     const response = await axiosInstance.get(`/products?${params.toString()}`);
 
     // Manejar el formato de respuesta del backend
-    let products = [];
-    if (response.data) {
-      if (Array.isArray(response.data)) {
-        products = response.data;
-      } else if (response.data.value && Array.isArray(response.data.value)) {
-        products = response.data.value;
-      }
+    if (response.data && response.data.value) {
+      return response.data.value;
     }
-    return products;
+    return response.data;
   },
 
   getProduct: async (id) => {
@@ -121,23 +103,6 @@ export const api = {
   getExchangeRates: async () => {
     const response = await axiosInstance.get('/exchange-rates');
     return response.data;
-  },
-
-  // Image upload
-  uploadImage: async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await fetch(`${API}/upload-image`, {
-      method: 'POST',
-      body: formData
-    });
-    if (!response.ok) throw new Error('Error al subir la imagen');
-    const data = await response.json();
-    // Prepend BACKEND_URL if the image_url is relative
-    if (data.image_url.startsWith('/')) {
-      return `${BACKEND_URL}${data.image_url}`;
-    }
-    return data.image_url;
   }
 };
 

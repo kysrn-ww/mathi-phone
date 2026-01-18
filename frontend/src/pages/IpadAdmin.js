@@ -92,29 +92,6 @@ const IpadAdmin = () => {
     setShowForm(true);
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor selecciona un archivo de imagen');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen no debe superar los 5MB');
-        return;
-      }
-
-      try {
-        const imageUrl = await api.uploadImage(file);
-        setFormData({ ...formData, image_url: imageUrl });
-        alert('Imagen subida exitosamente');
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        alert('Error al subir la imagen: ' + error.message);
-      }
-    }
-  };
-
   const handleDelete = async (productId) => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
       try {
@@ -186,13 +163,29 @@ const IpadAdmin = () => {
                     value={formData.model}
                     onChange={(e) => {
                       const newModel = e.target.value;
-                      const newImage = getProductImage('ipad', newModel, newModel);
-                      setFormData({ ...formData, model: newModel, type: newModel, image_url: newImage });
+                      const newImage = getProductImage('ipad', newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
                     }}
                   >
                     <option value="pro">iPad Pro</option>
                     <option value="air">iPad Air</option>
                     <option value="mini">iPad Mini</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Tipo</label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage('ipad', formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
+                  >
+                    <option value="pro">Pro</option>
+                    <option value="air">Air</option>
+                    <option value="mini">Mini</option>
                   </select>
                 </div>
 
@@ -329,28 +322,12 @@ const IpadAdmin = () => {
 
                 <div className="form-group">
                   <label>URL de Imagen</label>
-                  <div className="image-upload-group">
-                    <input
-                      type="url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                      placeholder="https://ejemplo.com/imagen.jpg"
-                    />
-                    <input
-                      type="file"
-                      id="image-upload"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      style={{ display: 'none' }}
-                    />
-                    <button
-                      type="button"
-                      className="btn-upload"
-                      onClick={() => document.getElementById('image-upload').click()}
-                    >
-                      Subir Imagen
-                    </button>
-                  </div>
+                  <input
+                    type="url"
+                    value={formData.image_url}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -405,7 +382,7 @@ const IpadAdmin = () => {
                 <td>{product.name}</td>
                 <td>{product.model}</td>
                 <td>{product.color}</td>
-                <td>${(product.price_ars || 0).toLocaleString()}</td>
+                <td>${product.price_ars.toLocaleString()}</td>
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>

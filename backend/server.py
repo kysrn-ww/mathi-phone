@@ -1,8 +1,9 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Query, File, UploadFile
+from fastapi import FastAPI, APIRouter, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
@@ -13,7 +14,6 @@ import uuid
 from datetime import datetime, timezone
 import asyncio
 import requests
-import shutil # Added shutil
 from mongodb_database import db
 from exchange_rates_service import exchange_service
 
@@ -319,22 +319,15 @@ async def get_exchange_rates():
 
 
 # Add CORS middleware BEFORE routes
-cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
-cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
-
-# Default origins if environment variable is not set
-if not cors_origins:
-    cors_origins = [
-        "http://localhost:3000",
-        "http://localhost:8001",
-        "https://mathi-phone.onrender.com",
-        "https://mathi-api.onrender.com"
-    ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=cors_origins,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:8001", 
+        "https://tienda.onrender.com",
+        "https://tienda-api.onrender.com"
+    ],
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
@@ -348,27 +341,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-# Static files for uploads
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "static", "uploads")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
-
-@app.post("/api/upload-image")
-async def upload_image(file: UploadFile = File(...)):
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="File must be an image")
-    
-    # Create unique filename
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{timestamp}_{file.filename}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
-    
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    # Return the relative URL
-    return {"image_url": f"/static/uploads/{filename}"}
 
 # Root endpoint - servir el frontend
 @app.get("/", include_in_schema=False)

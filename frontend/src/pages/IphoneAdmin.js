@@ -119,9 +119,21 @@ const IphoneAdmin = () => {
       }
 
       try {
-        const imageUrl = await api.uploadImage(file);
-        setFormData({ ...formData, image_url: imageUrl });
-        alert('Imagen subida exitosamente');
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('http://localhost:8001/api/upload-image', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setFormData({ ...formData, image_url: data.image_url });
+          alert('Imagen subida exitosamente');
+        } else {
+          throw new Error('Error al subir la imagen');
+        }
       } catch (error) {
         console.error('Error uploading image:', error);
         alert('Error al subir la imagen: ' + error.message);
@@ -449,7 +461,7 @@ const IphoneAdmin = () => {
                 <td>{product.name}</td>
                 <td>{product.model}</td>
                 <td>{product.color}</td>
-                <td>${(product.price_ars || 0).toLocaleString()}</td>
+                <td>${product.price_ars.toLocaleString()}</td>
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>

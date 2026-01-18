@@ -12,38 +12,38 @@
   --bg-dark: #0a0a0a;
   --bg-card: #1a1a1a;
   --bg-hover: #2a2a2a;
-  
+
   /* Text Colors */
   --text-primary: #ffffff;
   --text-secondary: #a1a1a6;
   --text-muted: #6e6e73;
-  
+
   /* Accent Colors */
   --accent-primary: #0071e3;
   --accent-hover: #0077ed;
   --accent-light: #2997ff;
-  
+
   /* Status Colors */
   --success: #30d158;
   --warning: #ff9f0a;
   --error: #ff453a;
   --info: #64d2ff;
-  
+
   /* Borders */
   --border-light: rgba(255, 255, 255, 0.1);
   --border-medium: rgba(255, 255, 255, 0.15);
   --border-heavy: rgba(255, 255, 255, 0.2);
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
-  
+
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -378,24 +378,26 @@
   line-height: 1.4;
 }
 
-.image-upload-group {
+.image-upload-section {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
-.image-upload-group input[type="url"] {
-  flex: 1;
+.image-upload-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .btn-upload {
   background: var(--accent-primary);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
   font-size: 0.9rem;
-  font-weight: 600;
   cursor: pointer;
   transition: var(--transition-fast);
   white-space: nowrap;
@@ -451,38 +453,38 @@
   .admin-container {
     padding: var(--spacing-md);
   }
-  
+
   .admin-header {
     flex-direction: column;
     gap: var(--spacing-md);
     text-align: center;
   }
-  
+
   .admin-header h1 {
     font-size: 2rem;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .modal-content {
     padding: var(--spacing-lg);
     margin: var(--spacing-md);
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .products-table {
     padding: var(--spacing-md);
   }
-  
+
   .products-table table {
     font-size: 0.9rem;
   }
-  
+
   .products-table th,
   .products-table td {
     padding: var(--spacing-sm);
@@ -1816,6 +1818,7 @@ body {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1826,6 +1829,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

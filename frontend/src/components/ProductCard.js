@@ -70,7 +70,7 @@ const ProductCard = ({ product }) => {
         <p className="product-description">{product.screen_size} • {product.chip}</p>
 
         <div className="product-features">
-          {(product.features || []).slice(0, 4).map((feature, idx) => (
+          {product.features.slice(0, 4).map((feature, idx) => (
             <span key={idx} className="feature-tag">{feature}</span>
           ))}
         </div>
@@ -78,10 +78,10 @@ const ProductCard = ({ product }) => {
         <div className="product-footer">
           <div className="product-price-section">
             <div className="product-price" data-testid="product-price">
-              ${(product.price_ars || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
+              ${product.price_ars.toLocaleString('es-AR', { maximumFractionDigits: 0 })}
             </div>
             <div className="product-price-usd">
-              USD ${(product.price_usd || 0).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+              USD ${product.price_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}
             </div>
           </div>
 

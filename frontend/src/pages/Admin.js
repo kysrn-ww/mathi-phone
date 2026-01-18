@@ -84,29 +84,6 @@ const Admin = () => {
     setShowForm(true);
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor selecciona un archivo de imagen');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen no debe superar los 5MB');
-        return;
-      }
-
-      try {
-        const imageUrl = await api.uploadImage(file);
-        setFormData({ ...formData, image_url: imageUrl });
-        alert('Imagen subida exitosamente');
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        alert('Error al subir la imagen: ' + error.message);
-      }
-    }
-  };
-
   const handleDelete = async (productId) => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
       try {
@@ -248,118 +225,129 @@ const Admin = () => {
                   />
                 </div>
 
-                {formData.category !== 'accesorio' && (
-                  <div className="form-group">
-                    <label>Modelo</label>
-                    <select
-                      value={formData.model}
-                      onChange={(e) => {
-                        const newModel = e.target.value;
-                        const newType = formData.category === 'ipad' ? newModel : formData.type;
-                        const newImage = getProductImage(formData.category, newModel, newType);
-                        setFormData({ ...formData, model: newModel, type: newType, image_url: newImage });
-                      }}
-                    >
-                      {formData.category === 'iphone' && (
-                        <>
-                          <option value="16">iPhone 16</option>
-                          <option value="15">iPhone 15</option>
-                          <option value="14">iPhone 14</option>
-                          <option value="13">iPhone 13</option>
-                          <option value="12">iPhone 12</option>
-                          <option value="11">iPhone 11</option>
-                          <option value="se">iPhone SE</option>
-                        </>
-                      )}
-                      {formData.category === 'macbook' && (
-                        <>
-                          <option value="air">MacBook Air</option>
-                          <option value="pro">MacBook Pro</option>
-                        </>
-                      )}
-                      {formData.category === 'watch' && (
-                        <>
-                          <option value="series-9">Series 9</option>
-                          <option value="ultra-2">Ultra 2</option>
-                          <option value="se">SE</option>
-                        </>
-                      )}
-                      {formData.category === 'airpods' && (
-                        <>
-                          <option value="pro-2">AirPods Pro 2</option>
-                          <option value="3">AirPods 3</option>
-                          <option value="max">AirPods Max</option>
-                        </>
-                      )}
-                      {formData.category === 'ipad' && (
-                        <>
-                          <option value="pro">iPad Pro</option>
-                          <option value="air">iPad Air</option>
-                          <option value="mini">iPad Mini</option>
-                        </>
-                      )}
-                    </select>
-                  </div>
-                )}
+                <div className="form-group">
+                  <label>Modelo</label>
+                  <select
+                    value={formData.model}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage(formData.category, newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
+                  >
+                    {formData.category === 'iphone' && (
+                      <>
+                        <option value="16">iPhone 16</option>
+                        <option value="15">iPhone 15</option>
+                        <option value="14">iPhone 14</option>
+                        <option value="13">iPhone 13</option>
+                        <option value="12">iPhone 12</option>
+                        <option value="11">iPhone 11</option>
+                        <option value="se">iPhone SE</option>
+                      </>
+                    )}
+                    {formData.category === 'macbook' && (
+                      <>
+                        <option value="air">MacBook Air</option>
+                        <option value="pro">MacBook Pro</option>
+                      </>
+                    )}
+                    {formData.category === 'watch' && (
+                      <>
+                        <option value="series-9">Series 9</option>
+                        <option value="ultra-2">Ultra 2</option>
+                        <option value="se">SE</option>
+                      </>
+                    )}
+                    {formData.category === 'airpods' && (
+                      <>
+                        <option value="pro-2">AirPods Pro 2</option>
+                        <option value="3">AirPods 3</option>
+                        <option value="max">AirPods Max</option>
+                      </>
+                    )}
+                    {formData.category === 'ipad' && (
+                      <>
+                        <option value="pro">iPad Pro</option>
+                        <option value="air">iPad Air</option>
+                        <option value="mini">iPad Mini</option>
+                      </>
+                    )}
+                    {formData.category === 'accesorio' && (
+                      <>
+                        <option value="lightning">Lightning</option>
+                        <option value="usb-c">USB-C</option>
+                        <option value="magsafe">MagSafe</option>
+                        <option value="pencil">Pencil</option>
+                        <option value="keyboard">Keyboard</option>
+                        <option value="airtag">AirTag</option>
+                      </>
+                    )}
+                  </select>
+                </div>
 
-                {formData.category !== 'ipad' && (
-                  <div className="form-group">
-                    <label>Tipo</label>
-                    <select
-                      value={formData.type}
-                      onChange={(e) => {
-                        const newType = e.target.value;
-                        const newModel = formData.category === 'accesorio' ? newType : formData.model;
-                        const newImage = getProductImage(formData.category, newModel, newType);
-                        setFormData({ ...formData, type: newType, model: newModel, image_url: newImage });
-                      }}
-                    >
-                      {formData.category === 'iphone' && (
-                        <>
-                          <option value="normal">Normal</option>
-                          <option value="pro">Pro</option>
-                          <option value="pro-max">Pro Max</option>
-                          <option value="plus">Plus</option>
-                          <option value="mini">Mini</option>
-                          <option value="se">SE</option>
-                        </>
-                      )}
-                      {formData.category === 'macbook' && (
-                        <>
-                          <option value="m1">M1</option>
-                          <option value="m2">M2</option>
-                          <option value="m3">M3</option>
-                          <option value="14">14"</option>
-                          <option value="16">16"</option>
-                        </>
-                      )}
-                      {formData.category === 'watch' && (
-                        <>
-                          <option value="normal">Normal</option>
-                          <option value="ultra">Ultra</option>
-                          <option value="se">SE</option>
-                        </>
-                      )}
-                      {formData.category === 'airpods' && (
-                        <>
-                          <option value="pro">Pro</option>
-                          <option value="normal">Normal</option>
-                          <option value="max">Max</option>
-                        </>
-                      )}
-                      {formData.category === 'accesorio' && (
-                        <>
-                          <option value="lightning">Lightning</option>
-                          <option value="usb-c">USB-C</option>
-                          <option value="magsafe">MagSafe</option>
-                          <option value="pencil">Pencil</option>
-                          <option value="keyboard">Keyboard</option>
-                          <option value="airtag">AirTag</option>
-                        </>
-                      )}
-                    </select>
-                  </div>
-                )}
+                <div className="form-group">
+                  <label>Tipo</label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage(formData.category, formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
+                  >
+                    {formData.category === 'iphone' && (
+                      <>
+                        <option value="normal">Normal</option>
+                        <option value="pro">Pro</option>
+                        <option value="pro-max">Pro Max</option>
+                        <option value="plus">Plus</option>
+                        <option value="mini">Mini</option>
+                        <option value="se">SE</option>
+                      </>
+                    )}
+                    {formData.category === 'macbook' && (
+                      <>
+                        <option value="m1">M1</option>
+                        <option value="m2">M2</option>
+                        <option value="m3">M3</option>
+                        <option value="14">14"</option>
+                        <option value="16">16"</option>
+                      </>
+                    )}
+                    {formData.category === 'watch' && (
+                      <>
+                        <option value="normal">Normal</option>
+                        <option value="ultra">Ultra</option>
+                        <option value="se">SE</option>
+                      </>
+                    )}
+                    {formData.category === 'airpods' && (
+                      <>
+                        <option value="pro">Pro</option>
+                        <option value="normal">Normal</option>
+                        <option value="max">Max</option>
+                      </>
+                    )}
+                    {formData.category === 'ipad' && (
+                      <>
+                        <option value="pro">Pro</option>
+                        <option value="air">Air</option>
+                        <option value="mini">Mini</option>
+                      </>
+                    )}
+                    {formData.category === 'accesorio' && (
+                      <>
+                        <option value="lightning">Lightning</option>
+                        <option value="usb-c">USB-C</option>
+                        <option value="magsafe">MagSafe</option>
+                        <option value="pencil">Pencil</option>
+                        <option value="keyboard">Keyboard</option>
+                        <option value="airtag">AirTag</option>
+                      </>
+                    )}
+                  </select>
+                </div>
 
                 <div className="form-group">
                   <label>Almacenamiento</label>
@@ -499,28 +487,12 @@ const Admin = () => {
 
                 <div className="form-group">
                   <label>URL de Imagen</label>
-                  <div className="image-upload-group">
-                    <input
-                      type="url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                      placeholder="https://ejemplo.com/imagen.jpg"
-                    />
-                    <input
-                      type="file"
-                      id="image-upload"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      style={{ display: 'none' }}
-                    />
-                    <button
-                      type="button"
-                      className="btn-upload"
-                      onClick={() => document.getElementById('image-upload').click()}
-                    >
-                      Subir Imagen
-                    </button>
-                  </div>
+                  <input
+                    type="url"
+                    value={formData.image_url}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -575,7 +547,7 @@ const Admin = () => {
                 <td>{product.name}</td>
                 <td>{product.model}</td>
                 <td>{product.color}</td>
-                <td>${(product.price_ars || 0).toLocaleString()}</td>
+                <td>${product.price_ars.toLocaleString()}</td>
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
