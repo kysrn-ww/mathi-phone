@@ -22,7 +22,7 @@ services:
     autoDeploy: true
 
   # Frontend Service
-  - type: web
+  - type: static
     name: mathi-phone
     env: static
     plan: free
@@ -38,8 +38,11 @@ services:
       - type: rewrite
         source: /api/*
         destination: https://mathi-api.onrender.com/api/*
+      # El catch-all para SPA en Render se maneja mejor sin extensiones
+      # O simplemente usando la configuración de "Push State" si estuviera disponible,
+      # pero como rewrite, es mejor ser específico o dejar que Render maneje los archivos estáticos primero.
       - type: rewrite
-        source: /*
+        source: /((?!static|.*\\..*).*)
         destination: /index.html
     headers:
       - path: /*
