@@ -320,8 +320,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:8001", 
         "https://mathi-phone.onrender.com",
-        "https://mathi-phone-api.onrender.com",
-        "*"  # Temporarily allow all origins for development
+        "https://mathi-api.onrender.com",
+        "https://mathi-phone-api.onrender.com"
     ],
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],

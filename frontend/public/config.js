@@ -6,12 +6,8 @@ window.APP_CONFIG = {
     
     // Si estamos en producción en Render
     if (hostname.includes('onrender.com')) {
-      // Si es el frontend principal, usar la API
-      if (hostname === 'mathi-phone.onrender.com') {
-        return 'https://mathi-phone-api.onrender.com';
-      }
-      // Si es la API, usar la misma URL
-      return `https://${hostname}`;
+      // Usar el mismo origen (para despliegue unificado)
+      return window.location.origin;
     }
     
     // Si estamos en el mismo servidor que el backend (port 8001)
