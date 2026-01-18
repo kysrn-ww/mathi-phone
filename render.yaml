@@ -6,7 +6,7 @@ services:
     plan: free
     rootDir: backend
     buildCommand: "pip install -r requirements.txt && chmod +x start.sh"
-    startCommand: "PYTHONPATH=$PYTHONPATH:. gunicorn -w 4 -k uvicorn.workers.UvicornWorker server:app"
+    startCommand: "./start.sh"
     envVars:
       - key: MONGO_URL
         sync: false

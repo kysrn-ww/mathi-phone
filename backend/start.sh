@@ -1,5 +1,11 @@
-#!/bin/bash
-# Forzar el uso de uvicorn directamente
+echo "Current directory: $(pwd)"
+echo "Files in current directory:"
+ls -la
+echo "Files in backend directory (if exists):"
+ls -la backend 2>/dev/null || echo "backend directory not found"
+
+export PYTHONPATH=$PYTHONPATH:.
+echo "PYTHONPATH: $PYTHONPATH"
+
 echo "Starting Mathi Phone API with uvicorn..."
-export PYTHONUNBUFFERED=1
-exec gunicorn -w 4 -k uvicorn.workers.UvicornWorker server:app --bind 0.0.0.0:$PORT
+exec python -m uvicorn server:app --host 0.0.0.0 --port $PORT
