@@ -79,6 +79,7 @@ class Product(BaseModel):
     warranty_months: int = 0
     description: str = ""
     image_url: str = ""
+    category: str = "iphone"  # iphone, macbook, watch, airpods, ipad, accesorio
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -119,6 +120,7 @@ class ProductUpdate(BaseModel):
     warranty_months: Optional[int] = None
     description: Optional[str] = None
     image_url: Optional[str] = None
+    category: Optional[str] = None
 
 
 # Exchange Rate Models
@@ -205,7 +207,8 @@ async def delete_product(product_id: str):
 
 @api_router.get("/products", response_model=List[Product])
 async def get_products(
-    model: Optional[str] = Query(None, description="Filter by model: 11, 12, 13, 14, 15, 16, 17, se"),
+    category: Optional[str] = Query(None, description="Filter by category: iphone, macbook, watch, airpods, ipad, accesorio"),
+    model: Optional[str] = Query(None, description="Filter by model"),
     type: Optional[str] = Query(None, description="Filter by type: pro-max, pro, plus, normal, mini, se"),
     condition: Optional[str] = Query(None, description="Filter by condition: sealed, like-new, excellent, good"),
     min_battery: Optional[int] = Query(None, ge=0, le=100, description="Minimum battery health"),
@@ -222,6 +225,8 @@ async def get_products(
     products = await db.get_products()
     
     # Apply filters
+    if category:
+        products = [p for p in products if p.get('category') == category]
     if model:
         products = [p for p in products if p.get('model') == model]
     if type:

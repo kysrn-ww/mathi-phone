@@ -51,6 +51,8 @@ class MongoDBDatabase:
         try:
             query = {}
             if filters:
+                if filters.get('category'):
+                    query['category'] = filters['category']
                 if filters.get('model'):
                     query['model'] = filters['model']
                 if filters.get('type'):
