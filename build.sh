@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Script de build para producción en Render
 echo "🚀 Iniciando build para producción..."
@@ -10,7 +11,7 @@ pip install -r requirements.txt
 # Construir frontend
 echo "🏗️ Construyendo frontend..."
 cd frontend
-npm install
+npm install --legacy-peer-deps
 npm run build
 cd ..
 
