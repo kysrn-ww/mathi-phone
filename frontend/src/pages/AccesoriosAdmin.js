@@ -13,8 +13,7 @@ const AccesoriosAdmin = () => {
     type: 'pencil',
     storage: '',
     color: '',
-    condition: 'excellent',
-    battery_health: 90,
+    condition: 'sealed',
     price_ars: '',
     price_usd: '',
     screen_size: '',
@@ -110,8 +109,7 @@ const AccesoriosAdmin = () => {
       type: 'pencil',
       storage: '',
       color: '',
-      condition: 'excellent',
-      battery_health: 90,
+      condition: 'sealed',
       price_ars: '',
       price_usd: '',
       screen_size: '',
@@ -167,6 +165,9 @@ const AccesoriosAdmin = () => {
                       setFormData({ ...formData, type: newType, model: newType, image_url: newImage });
                     }}
                   >
+                    <option value="lightning">Lightning</option>
+                    <option value="usb-c">USB-C</option>
+                    <option value="magsafe">MagSafe</option>
                     <option value="pencil">Apple Pencil</option>
                     <option value="keyboard">Teclado</option>
                     <option value="airtag">AirTag</option>
@@ -203,23 +204,9 @@ const AccesoriosAdmin = () => {
                     onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
-                    <option value="like-new">Como Nuevo</option>
-                    <option value="excellent">Excelente</option>
-                    <option value="good">Bueno</option>
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label>Salud de Batería (%)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={formData.battery_health}
-                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
-                    placeholder="Ej: 90 (si aplica)"
-                  />
-                </div>
 
                 <div className="form-group">
                   <label>Precio ARS</label>

@@ -59,6 +59,9 @@ export const PRODUCT_IMAGES = {
         'mini': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-mini-finish-select-202109-64gb-space-gray-wifi?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1631392437000'
     },
     accesorio: {
+        'lightning': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MX0K2?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1566854194000',
+        'usb-c': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MU8F2?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1540511993968',
+        'magsafe': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MHXH3?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1601660618000',
         'pencil': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MU8F2?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1540511993968',
         'keyboard': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MJVG3?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1616191921000',
         'airtag': 'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MX542?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1617761788000'
