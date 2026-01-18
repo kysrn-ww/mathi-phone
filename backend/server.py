@@ -319,9 +319,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:8001", 
-        "https://mathi-phone.onrender.com",
-        "https://mathi-api.onrender.com",
-        "https://mathi-phone-api.onrender.com"
+        "https://tienda.onrender.com",
+        "https://tienda-api.onrender.com"
     ],
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -352,7 +351,7 @@ async def serve_root():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Mathi Phone - Frontend no construido</title>
+        <title>Tienda - Frontend no construido</title>
         <style>
             body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
             .error { color: #e74c3c; }
@@ -369,7 +368,7 @@ async def serve_root():
 
 @app.get("/api/info")
 async def root():
-    return {"message": "Mathi Phone API is running!", "version": "1.0.0"}
+    return {"message": "Tienda API is running!", "version": "1.0.0"}
 
 @app.get("/docs")
 async def docs():
@@ -404,7 +403,7 @@ async def serve_frontend(full_path: str):
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Mathi Phone - Frontend no construido</title>
+        <title>Tienda - Frontend no construido</title>
         <style>
             body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
             .error { color: #e74c3c; }
