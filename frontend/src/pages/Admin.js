@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { getProductImage } from '../utils/productDefaults';
 
 const Admin = () => {
   const [products, setProducts] = useState([]);
@@ -23,7 +24,8 @@ const Admin = () => {
     available: true,
     warranty_months: 6,
     description: '',
-    image_url: ''
+    image_url: getProductImage('iphone', '16', 'pro-max'),
+    category: 'iphone'
   });
 
   useEffect(() => {
@@ -94,22 +96,22 @@ const Admin = () => {
   };
 
   const formatPrice = (value) => {
-  if (!value) return '';
-  // Remove all non-digit characters
-  const cleanValue = value.replace(/[^\d]/g, '');
-  // Add dots as thousand separators
-  return cleanValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-};
+    if (!value) return '';
+    // Remove all non-digit characters
+    const cleanValue = value.replace(/[^\d]/g, '');
+    // Add dots as thousand separators
+    return cleanValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
 
-const handlePriceChange = (field, value) => {
-  // Remove all non-digit characters
-  const cleanValue = value.replace(/[^\d]/g, '');
-  // Format with dots
-  const formattedValue = formatPrice(cleanValue);
-  setFormData({...formData, [field]: formattedValue});
-};
+  const handlePriceChange = (field, value) => {
+    // Remove all non-digit characters
+    const cleanValue = value.replace(/[^\d]/g, '');
+    // Format with dots
+    const formattedValue = formatPrice(cleanValue);
+    setFormData({ ...formData, [field]: formattedValue });
+  };
 
-const resetForm = () => {
+  const resetForm = () => {
     setFormData({
       name: '',
       model: '16',
@@ -127,7 +129,8 @@ const resetForm = () => {
       available: true,
       warranty_months: 6,
       description: '',
-      image_url: ''
+      image_url: getProductImage('iphone', '16', 'pro-max'),
+      category: 'iphone'
     });
   };
 
@@ -154,31 +157,31 @@ const resetForm = () => {
             <h3>iPhones</h3>
             <p>Administrar iPhone 11, 12, 13, 14, 15, 16, 17, SE</p>
           </a>
-          
+
           <a href="/admin/macbooks" className="category-card">
             <div className="category-icon">💻</div>
             <h3>MacBooks</h3>
             <p>Administrar MacBook Air, Pro, modelos M1/M2/M3</p>
           </a>
-          
+
           <a href="/admin/apple-watch" className="category-card">
             <div className="category-icon">⌚</div>
             <h3>Apple Watch</h3>
             <p>Administrar Series 7, 8, 9, SE, Ultra</p>
           </a>
-          
+
           <a href="/admin/airpods" className="category-card">
             <div className="category-icon">🎧</div>
             <h3>AirPods</h3>
             <p>Administrar AirPods, AirPods Pro, AirPods Max</p>
           </a>
-          
+
           <a href="/admin/ipads" className="category-card">
             <div className="category-icon">📱</div>
             <h3>iPads</h3>
             <p>Administrar iPad Air, Pro, Mini, modelos estándar</p>
           </a>
-          
+
           <a href="/admin/accesorios" className="category-card">
             <div className="category-icon">🔌</div>
             <h3>Accesorios</h3>
@@ -194,11 +197,30 @@ const resetForm = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-grid">
                 <div className="form-group">
+                  <label>Categoría</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => {
+                      const newCategory = e.target.value;
+                      const newImage = getProductImage(newCategory, formData.model, formData.type);
+                      setFormData({ ...formData, category: newCategory, image_url: newImage });
+                    }}
+                  >
+                    <option value="iphone">iPhone</option>
+                    <option value="macbook">MacBook</option>
+                    <option value="watch">Apple Watch</option>
+                    <option value="airpods">AirPods</option>
+                    <option value="ipad">iPad</option>
+                    <option value="accesorio">Accesorio</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
                   <label>Nombre del Producto</label>
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: iPhone 16 Pro Max"
                   />
                 </div>
@@ -207,16 +229,27 @@ const resetForm = () => {
                   <label>Modelo</label>
                   <select
                     value={formData.model}
-                    onChange={(e) => setFormData({...formData, model: e.target.value})}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage(formData.category, newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
                   >
-                    <option value="11">iPhone 11</option>
-                    <option value="12">iPhone 12</option>
-                    <option value="13">iPhone 13</option>
-                    <option value="14">iPhone 14</option>
-                    <option value="15">iPhone 15</option>
                     <option value="16">iPhone 16</option>
-                    <option value="17">iPhone 17</option>
+                    <option value="15">iPhone 15</option>
+                    <option value="14">iPhone 14</option>
+                    <option value="13">iPhone 13</option>
+                    <option value="12">iPhone 12</option>
+                    <option value="11">iPhone 11</option>
                     <option value="se">iPhone SE</option>
+                    <option value="air">Air</option>
+                    <option value="pro">Pro</option>
+                    <option value="series-9">Series 9</option>
+                    <option value="ultra-2">Ultra 2</option>
+                    <option value="pro-2">Pro 2</option>
+                    <option value="3">3rd Gen</option>
+                    <option value="pencil">Pencil</option>
+                    <option value="keyboard">Keyboard</option>
                   </select>
                 </div>
 
@@ -224,14 +257,25 @@ const resetForm = () => {
                   <label>Tipo</label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage(formData.category, formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
                   >
                     <option value="normal">Normal</option>
-                    <option value="mini">Mini</option>
-                    <option value="plus">Plus</option>
                     <option value="pro">Pro</option>
                     <option value="pro-max">Pro Max</option>
+                    <option value="plus">Plus</option>
+                    <option value="mini">Mini</option>
                     <option value="se">SE</option>
+                    <option value="m1">M1</option>
+                    <option value="m2">M2</option>
+                    <option value="m3">M3</option>
+                    <option value="14">14"</option>
+                    <option value="16">16"</option>
+                    <option value="ultra">Ultra</option>
+                    <option value="max">Max</option>
                   </select>
                 </div>
 
@@ -239,7 +283,7 @@ const resetForm = () => {
                   <label>Almacenamiento</label>
                   <select
                     value={formData.storage}
-                    onChange={(e) => setFormData({...formData, storage: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
                   >
                     <option value="64GB">64GB</option>
                     <option value="128GB">128GB</option>
@@ -254,7 +298,7 @@ const resetForm = () => {
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({...formData, color: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     placeholder="Ej: Plateado, Negro, Azul"
                   />
                 </div>
@@ -263,7 +307,7 @@ const resetForm = () => {
                   <label>Condición</label>
                   <select
                     value={formData.condition}
-                    onChange={(e) => setFormData({...formData, condition: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
                     <option value="like-new">Como Nuevo</option>
@@ -279,7 +323,7 @@ const resetForm = () => {
                     min="0"
                     max="100"
                     value={formData.battery_health}
-                    onChange={(e) => setFormData({...formData, battery_health: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
                     placeholder="Ej: 90"
                   />
                 </div>
@@ -309,7 +353,7 @@ const resetForm = () => {
                   <input
                     type="text"
                     value={formData.screen_size}
-                    onChange={(e) => setFormData({...formData, screen_size: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, screen_size: e.target.value })}
                     placeholder="Ej: 6.7 Super Retina XDR"
                   />
                 </div>
@@ -319,7 +363,7 @@ const resetForm = () => {
                   <input
                     type="text"
                     value={formData.chip}
-                    onChange={(e) => setFormData({...formData, chip: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, chip: e.target.value })}
                     placeholder="Ej: A18 Pro"
                   />
                 </div>
@@ -329,7 +373,7 @@ const resetForm = () => {
                   <input
                     type="text"
                     value={formData.camera}
-                    onChange={(e) => setFormData({...formData, camera: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, camera: e.target.value })}
                     placeholder="Ej: 48MP Principal + 12MP Ultra Gran Angular"
                   />
                 </div>
@@ -339,7 +383,7 @@ const resetForm = () => {
                   <input
                     type="text"
                     value={formData.features}
-                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     placeholder="Ej: 5G, ProMotion 120Hz, Dynamic Island"
                   />
                 </div>
@@ -351,7 +395,7 @@ const resetForm = () => {
                     min="0"
                     max="12"
                     value={formData.warranty_months}
-                    onChange={(e) => setFormData({...formData, warranty_months: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, warranty_months: parseInt(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -359,7 +403,7 @@ const resetForm = () => {
                   <label>Descripción</label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows="3"
                     placeholder="Describe el producto..."
                   />
@@ -370,7 +414,7 @@ const resetForm = () => {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     placeholder="https://ejemplo.com/imagen.jpg"
                   />
                 </div>
@@ -380,7 +424,7 @@ const resetForm = () => {
                     <input
                       type="checkbox"
                       checked={formData.available}
-                      onChange={(e) => setFormData({...formData, available: e.target.checked})}
+                      onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     />
                     Disponible
                   </label>
@@ -391,8 +435,8 @@ const resetForm = () => {
                 <button type="submit" className="btn-save">
                   {editingProduct ? 'Actualizar' : 'Guardar'}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-cancel"
                   onClick={() => {
                     setShowForm(false);
@@ -431,13 +475,13 @@ const resetForm = () => {
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(product)}
                   >
                     Editar
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(product.id)}
                   >
@@ -448,7 +492,7 @@ const resetForm = () => {
             ))}
           </tbody>
         </table>
-        
+
         {products.length === 0 && (
           <div className="no-products">
             <p>No hay productos agregados aún</p>
@@ -457,8 +501,8 @@ const resetForm = () => {
       </div>
 
       <div className="add-product-section">
-        <button 
-          className="btn-add-product" 
+        <button
+          className="btn-add-product"
           onClick={() => {
             setShowForm(true);
             setEditingProduct(null);

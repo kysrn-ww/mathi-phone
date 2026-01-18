@@ -64,8 +64,9 @@ export const api = {
   // Products
   getProducts: async (filters = {}) => {
     const params = new URLSearchParams();
+    if (filters.category) params.append('category', filters.category);
     Object.keys(filters).forEach(key => {
-      if (filters[key] !== null && filters[key] !== undefined && filters[key] !== '') {
+      if (key !== 'category' && filters[key] !== null && filters[key] !== undefined && filters[key] !== '') {
         params.append(key, filters[key]);
       }
     });

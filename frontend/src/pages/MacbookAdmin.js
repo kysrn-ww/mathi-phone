@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { getProductImage } from '../utils/productDefaults';
 
 const MacbookAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -8,8 +9,8 @@ const MacbookAdmin = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    model: 'macbook-pro',
-    type: 'pro',
+    model: 'air',
+    type: 'm1',
     storage: '512GB',
     color: '',
     condition: 'excellent',
@@ -23,7 +24,8 @@ const MacbookAdmin = () => {
     available: true,
     warranty_months: 6,
     description: '',
-    image_url: ''
+    image_url: getProductImage('macbook', 'air', 'm1'),
+    category: 'macbook'
   });
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const MacbookAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await api.getProducts();
+      const data = await api.getProducts({ category: 'macbook' });
       setProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -50,7 +52,7 @@ const MacbookAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    setFormData({...formData, [field]: formattedValue});
+    setFormData({ ...formData, [field]: formattedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -104,8 +106,8 @@ const MacbookAdmin = () => {
   const resetForm = () => {
     setFormData({
       name: '',
-      model: 'macbook-pro',
-      type: 'pro',
+      model: 'air',
+      type: 'm1',
       storage: '512GB',
       color: '',
       condition: 'excellent',
@@ -119,7 +121,8 @@ const MacbookAdmin = () => {
       available: true,
       warranty_months: 6,
       description: '',
-      image_url: ''
+      image_url: getProductImage('macbook', 'air', 'm1'),
+      category: 'macbook'
     });
   };
 
@@ -149,7 +152,7 @@ const MacbookAdmin = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: MacBook Pro 16 pulgadas"
                   />
                 </div>
@@ -158,10 +161,14 @@ const MacbookAdmin = () => {
                   <label>Modelo</label>
                   <select
                     value={formData.model}
-                    onChange={(e) => setFormData({...formData, model: e.target.value})}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage('macbook', newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
                   >
-                    <option value="macbook-air">MacBook Air</option>
-                    <option value="macbook-pro">MacBook Pro</option>
+                    <option value="air">MacBook Air</option>
+                    <option value="pro">MacBook Pro</option>
                   </select>
                 </div>
 
@@ -169,10 +176,17 @@ const MacbookAdmin = () => {
                   <label>Tipo</label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage('macbook', formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
                   >
-                    <option value="air">Air</option>
-                    <option value="pro">Pro</option>
+                    <option value="m1">M1</option>
+                    <option value="m2">M2</option>
+                    <option value="m3">M3</option>
+                    <option value="14">14 pulgadas</option>
+                    <option value="16">16 pulgadas</option>
                   </select>
                 </div>
 
@@ -180,7 +194,7 @@ const MacbookAdmin = () => {
                   <label>Almacenamiento</label>
                   <select
                     value={formData.storage}
-                    onChange={(e) => setFormData({...formData, storage: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
                   >
                     <option value="256GB">256GB</option>
                     <option value="512GB">512GB</option>
@@ -196,7 +210,7 @@ const MacbookAdmin = () => {
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({...formData, color: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     placeholder="Ej: Space Gray, Silver"
                   />
                 </div>
@@ -205,7 +219,7 @@ const MacbookAdmin = () => {
                   <label>Condición</label>
                   <select
                     value={formData.condition}
-                    onChange={(e) => setFormData({...formData, condition: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
                     <option value="like-new">Como Nuevo</option>
@@ -221,7 +235,7 @@ const MacbookAdmin = () => {
                     min="0"
                     max="100"
                     value={formData.battery_health}
-                    onChange={(e) => setFormData({...formData, battery_health: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
                     placeholder="Ej: 90"
                   />
                 </div>
@@ -251,7 +265,7 @@ const MacbookAdmin = () => {
                   <input
                     type="text"
                     value={formData.screen_size}
-                    onChange={(e) => setFormData({...formData, screen_size: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, screen_size: e.target.value })}
                     placeholder="Ej: 16 pulgadas Liquid Retina XDR"
                   />
                 </div>
@@ -261,7 +275,7 @@ const MacbookAdmin = () => {
                   <input
                     type="text"
                     value={formData.chip}
-                    onChange={(e) => setFormData({...formData, chip: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, chip: e.target.value })}
                     placeholder="Ej: M3 Pro"
                   />
                 </div>
@@ -271,7 +285,7 @@ const MacbookAdmin = () => {
                   <input
                     type="text"
                     value={formData.features}
-                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     placeholder="Ej: Touch Bar, Force Touch, Retina Display"
                   />
                 </div>
@@ -283,7 +297,7 @@ const MacbookAdmin = () => {
                     min="0"
                     max="12"
                     value={formData.warranty_months}
-                    onChange={(e) => setFormData({...formData, warranty_months: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, warranty_months: parseInt(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -291,7 +305,7 @@ const MacbookAdmin = () => {
                   <label>Descripción</label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows="3"
                     placeholder="Describe el MacBook..."
                   />
@@ -302,7 +316,7 @@ const MacbookAdmin = () => {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     placeholder="https://ejemplo.com/imagen.jpg"
                   />
                 </div>
@@ -312,7 +326,7 @@ const MacbookAdmin = () => {
                     <input
                       type="checkbox"
                       checked={formData.available}
-                      onChange={(e) => setFormData({...formData, available: e.target.checked})}
+                      onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     />
                     Disponible
                   </label>
@@ -323,8 +337,8 @@ const MacbookAdmin = () => {
                 <button type="submit" className="btn-save">
                   {editingProduct ? 'Actualizar' : 'Guardar'}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-cancel"
                   onClick={() => {
                     setShowForm(false);
@@ -363,13 +377,13 @@ const MacbookAdmin = () => {
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(product)}
                   >
                     Editar
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(product.id)}
                   >
@@ -380,7 +394,7 @@ const MacbookAdmin = () => {
             ))}
           </tbody>
         </table>
-        
+
         {products.length === 0 && (
           <div className="no-products">
             <p>No hay MacBooks agregados aún</p>
@@ -389,8 +403,8 @@ const MacbookAdmin = () => {
       </div>
 
       <div className="add-product-section">
-        <button 
-          className="btn-add-product" 
+        <button
+          className="btn-add-product"
           onClick={() => {
             setShowForm(true);
             setEditingProduct(null);

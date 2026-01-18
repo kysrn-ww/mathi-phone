@@ -101,6 +101,7 @@ class ProductCreate(BaseModel):
     warranty_months: int = 0
     description: str = ""
     image_url: str = ""
+    category: str = "iphone"
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None

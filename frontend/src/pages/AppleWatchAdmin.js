@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { getProductImage } from '../utils/productDefaults';
 
 const AppleWatchAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -23,7 +24,8 @@ const AppleWatchAdmin = () => {
     available: true,
     warranty_months: 6,
     description: '',
-    image_url: ''
+    image_url: getProductImage('watch', 'series-9', 'normal'),
+    category: 'watch'
   });
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const AppleWatchAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await api.getProducts();
+      const data = await api.getProducts({ category: 'watch' });
       setProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -50,7 +52,7 @@ const AppleWatchAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    setFormData({...formData, [field]: formattedValue});
+    setFormData({ ...formData, [field]: formattedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -119,7 +121,8 @@ const AppleWatchAdmin = () => {
       available: true,
       warranty_months: 6,
       description: '',
-      image_url: ''
+      image_url: getProductImage('watch', 'series-9', 'normal'),
+      category: 'watch'
     });
   };
 
@@ -149,7 +152,7 @@ const AppleWatchAdmin = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: Apple Watch Ultra 2"
                   />
                 </div>
@@ -158,13 +161,15 @@ const AppleWatchAdmin = () => {
                   <label>Modelo</label>
                   <select
                     value={formData.model}
-                    onChange={(e) => setFormData({...formData, model: e.target.value})}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage('watch', newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
                   >
                     <option value="series-9">Apple Watch Series 9</option>
                     <option value="ultra-2">Apple Watch Ultra 2</option>
                     <option value="se">Apple Watch SE</option>
-                    <option value="series-8">Apple Watch Series 8</option>
-                    <option value="series-7">Apple Watch Series 7</option>
                   </select>
                 </div>
 
@@ -172,11 +177,15 @@ const AppleWatchAdmin = () => {
                   <label>Tipo</label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage('watch', formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
                   >
-                    <option value="se">SE</option>
                     <option value="normal">Normal</option>
                     <option value="ultra">Ultra</option>
+                    <option value="se">SE</option>
                   </select>
                 </div>
 
@@ -184,7 +193,7 @@ const AppleWatchAdmin = () => {
                   <label>Almacenamiento</label>
                   <select
                     value={formData.storage}
-                    onChange={(e) => setFormData({...formData, storage: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
                   >
                     <option value="32GB">32GB</option>
                     <option value="64GB">64GB</option>
@@ -199,7 +208,7 @@ const AppleWatchAdmin = () => {
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({...formData, color: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     placeholder="Ej: Midnight, Starlight, Product RED"
                   />
                 </div>
@@ -208,7 +217,7 @@ const AppleWatchAdmin = () => {
                   <label>Condición</label>
                   <select
                     value={formData.condition}
-                    onChange={(e) => setFormData({...formData, condition: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
                     <option value="like-new">Como Nuevo</option>
@@ -224,7 +233,7 @@ const AppleWatchAdmin = () => {
                     min="0"
                     max="100"
                     value={formData.battery_health}
-                    onChange={(e) => setFormData({...formData, battery_health: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
                     placeholder="Ej: 90"
                   />
                 </div>
@@ -254,7 +263,7 @@ const AppleWatchAdmin = () => {
                   <input
                     type="text"
                     value={formData.screen_size}
-                    onChange={(e) => setFormData({...formData, screen_size: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, screen_size: e.target.value })}
                     placeholder="Ej: 49mm Always-On Retina LTPO"
                   />
                 </div>
@@ -264,7 +273,7 @@ const AppleWatchAdmin = () => {
                   <input
                     type="text"
                     value={formData.chip}
-                    onChange={(e) => setFormData({...formData, chip: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, chip: e.target.value })}
                     placeholder="Ej: S9 SiP"
                   />
                 </div>
@@ -274,7 +283,7 @@ const AppleWatchAdmin = () => {
                   <input
                     type="text"
                     value={formData.features}
-                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     placeholder="Ej: GPS, Cellular, Water Resistant, Always-On Display"
                   />
                 </div>
@@ -286,7 +295,7 @@ const AppleWatchAdmin = () => {
                     min="0"
                     max="12"
                     value={formData.warranty_months}
-                    onChange={(e) => setFormData({...formData, warranty_months: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, warranty_months: parseInt(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -294,7 +303,7 @@ const AppleWatchAdmin = () => {
                   <label>Descripción</label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows="3"
                     placeholder="Describe el Apple Watch..."
                   />
@@ -305,7 +314,7 @@ const AppleWatchAdmin = () => {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     placeholder="https://ejemplo.com/imagen.jpg"
                   />
                 </div>
@@ -315,7 +324,7 @@ const AppleWatchAdmin = () => {
                     <input
                       type="checkbox"
                       checked={formData.available}
-                      onChange={(e) => setFormData({...formData, available: e.target.checked})}
+                      onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     />
                     Disponible
                   </label>
@@ -326,8 +335,8 @@ const AppleWatchAdmin = () => {
                 <button type="submit" className="btn-save">
                   {editingProduct ? 'Actualizar' : 'Guardar'}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-cancel"
                   onClick={() => {
                     setShowForm(false);
@@ -366,13 +375,13 @@ const AppleWatchAdmin = () => {
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(product)}
                   >
                     Editar
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(product.id)}
                   >
@@ -383,7 +392,7 @@ const AppleWatchAdmin = () => {
             ))}
           </tbody>
         </table>
-        
+
         {products.length === 0 && (
           <div className="no-products">
             <p>No hay Apple Watch agregados aún</p>
@@ -392,8 +401,8 @@ const AppleWatchAdmin = () => {
       </div>
 
       <div className="add-product-section">
-        <button 
-          className="btn-add-product" 
+        <button
+          className="btn-add-product"
           onClick={() => {
             setShowForm(true);
             setEditingProduct(null);

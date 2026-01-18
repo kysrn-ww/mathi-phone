@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { getProductImage } from '../utils/productDefaults';
 
 const IpadAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ const IpadAdmin = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    model: 'ipad-pro',
+    model: 'pro',
     type: 'pro',
     storage: '256GB',
     color: '',
@@ -23,7 +24,8 @@ const IpadAdmin = () => {
     available: true,
     warranty_months: 6,
     description: '',
-    image_url: ''
+    image_url: getProductImage('ipad', 'pro', 'pro'),
+    category: 'ipad'
   });
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const IpadAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await api.getProducts();
+      const data = await api.getProducts({ category: 'ipad' });
       setProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -50,7 +52,7 @@ const IpadAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    setFormData({...formData, [field]: formattedValue});
+    setFormData({ ...formData, [field]: formattedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -104,7 +106,7 @@ const IpadAdmin = () => {
   const resetForm = () => {
     setFormData({
       name: '',
-      model: 'ipad-pro',
+      model: 'pro',
       type: 'pro',
       storage: '256GB',
       color: '',
@@ -119,7 +121,8 @@ const IpadAdmin = () => {
       available: true,
       warranty_months: 6,
       description: '',
-      image_url: ''
+      image_url: getProductImage('ipad', 'pro', 'pro'),
+      category: 'ipad'
     });
   };
 
@@ -149,7 +152,7 @@ const IpadAdmin = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: iPad Pro 12.9 pulgadas"
                   />
                 </div>
@@ -158,13 +161,15 @@ const IpadAdmin = () => {
                   <label>Modelo</label>
                   <select
                     value={formData.model}
-                    onChange={(e) => setFormData({...formData, model: e.target.value})}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage('ipad', newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
                   >
-                    <option value="ipad-pro">iPad Pro</option>
-                    <option value="ipad-air">iPad Air</option>
-                    <option value="ipad-10">iPad 10th Gen</option>
-                    <option value="ipad-9">iPad 9th Gen</option>
-                    <option value="ipad-mini">iPad Mini</option>
+                    <option value="pro">iPad Pro</option>
+                    <option value="air">iPad Air</option>
+                    <option value="mini">iPad Mini</option>
                   </select>
                 </div>
 
@@ -172,11 +177,14 @@ const IpadAdmin = () => {
                   <label>Tipo</label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage('ipad', formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
                   >
                     <option value="pro">Pro</option>
                     <option value="air">Air</option>
-                    <option value="normal">Normal</option>
                     <option value="mini">Mini</option>
                   </select>
                 </div>
@@ -185,7 +193,7 @@ const IpadAdmin = () => {
                   <label>Almacenamiento</label>
                   <select
                     value={formData.storage}
-                    onChange={(e) => setFormData({...formData, storage: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
                   >
                     <option value="64GB">64GB</option>
                     <option value="128GB">128GB</option>
@@ -201,7 +209,7 @@ const IpadAdmin = () => {
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({...formData, color: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     placeholder="Ej: Space Gray, Silver, Sky Blue"
                   />
                 </div>
@@ -210,7 +218,7 @@ const IpadAdmin = () => {
                   <label>Condición</label>
                   <select
                     value={formData.condition}
-                    onChange={(e) => setFormData({...formData, condition: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
                     <option value="like-new">Como Nuevo</option>
@@ -226,7 +234,7 @@ const IpadAdmin = () => {
                     min="0"
                     max="100"
                     value={formData.battery_health}
-                    onChange={(e) => setFormData({...formData, battery_health: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
                     placeholder="Ej: 90"
                   />
                 </div>
@@ -256,7 +264,7 @@ const IpadAdmin = () => {
                   <input
                     type="text"
                     value={formData.screen_size}
-                    onChange={(e) => setFormData({...formData, screen_size: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, screen_size: e.target.value })}
                     placeholder="Ej: 12.9 pulgadas Liquid Retina XDR"
                   />
                 </div>
@@ -266,7 +274,7 @@ const IpadAdmin = () => {
                   <input
                     type="text"
                     value={formData.chip}
-                    onChange={(e) => setFormData({...formData, chip: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, chip: e.target.value })}
                     placeholder="Ej: M2"
                   />
                 </div>
@@ -276,7 +284,7 @@ const IpadAdmin = () => {
                   <input
                     type="text"
                     value={formData.camera}
-                    onChange={(e) => setFormData({...formData, camera: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, camera: e.target.value })}
                     placeholder="Ej: 12MP Wide + 10MP Ultra Wide"
                   />
                 </div>
@@ -286,7 +294,7 @@ const IpadAdmin = () => {
                   <input
                     type="text"
                     value={formData.features}
-                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     placeholder="Ej: Apple Pencil, Smart Keyboard, ProMotion, True Tone"
                   />
                 </div>
@@ -298,7 +306,7 @@ const IpadAdmin = () => {
                     min="0"
                     max="12"
                     value={formData.warranty_months}
-                    onChange={(e) => setFormData({...formData, warranty_months: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, warranty_months: parseInt(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -306,7 +314,7 @@ const IpadAdmin = () => {
                   <label>Descripción</label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows="3"
                     placeholder="Describe el iPad..."
                   />
@@ -317,7 +325,7 @@ const IpadAdmin = () => {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     placeholder="https://ejemplo.com/imagen.jpg"
                   />
                 </div>
@@ -327,7 +335,7 @@ const IpadAdmin = () => {
                     <input
                       type="checkbox"
                       checked={formData.available}
-                      onChange={(e) => setFormData({...formData, available: e.target.checked})}
+                      onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     />
                     Disponible
                   </label>
@@ -338,8 +346,8 @@ const IpadAdmin = () => {
                 <button type="submit" className="btn-save">
                   {editingProduct ? 'Actualizar' : 'Guardar'}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-cancel"
                   onClick={() => {
                     setShowForm(false);
@@ -378,13 +386,13 @@ const IpadAdmin = () => {
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(product)}
                   >
                     Editar
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(product.id)}
                   >
@@ -395,7 +403,7 @@ const IpadAdmin = () => {
             ))}
           </tbody>
         </table>
-        
+
         {products.length === 0 && (
           <div className="no-products">
             <p>No hay iPads agregados aún</p>
@@ -404,8 +412,8 @@ const IpadAdmin = () => {
       </div>
 
       <div className="add-product-section">
-        <button 
-          className="btn-add-product" 
+        <button
+          className="btn-add-product"
           onClick={() => {
             setShowForm(true);
             setEditingProduct(null);

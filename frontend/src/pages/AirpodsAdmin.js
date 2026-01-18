@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { getProductImage } from '../utils/productDefaults';
 
 const AirpodsAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ const AirpodsAdmin = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    model: 'airpods-pro',
+    model: 'pro-2',
     type: 'pro',
     storage: '',
     color: '',
@@ -23,7 +24,8 @@ const AirpodsAdmin = () => {
     available: true,
     warranty_months: 6,
     description: '',
-    image_url: ''
+    image_url: getProductImage('airpods', 'pro-2', 'pro'),
+    category: 'airpods'
   });
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const AirpodsAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await api.getProducts();
+      const data = await api.getProducts({ category: 'airpods' });
       setProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -50,7 +52,7 @@ const AirpodsAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    setFormData({...formData, [field]: formattedValue});
+    setFormData({ ...formData, [field]: formattedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -104,7 +106,7 @@ const AirpodsAdmin = () => {
   const resetForm = () => {
     setFormData({
       name: '',
-      model: 'airpods-pro',
+      model: 'pro-2',
       type: 'pro',
       storage: '',
       color: '',
@@ -119,7 +121,8 @@ const AirpodsAdmin = () => {
       available: true,
       warranty_months: 6,
       description: '',
-      image_url: ''
+      image_url: getProductImage('airpods', 'pro-2', 'pro'),
+      category: 'airpods'
     });
   };
 
@@ -149,7 +152,7 @@ const AirpodsAdmin = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: AirPods Pro 2nd Generation"
                   />
                 </div>
@@ -158,13 +161,15 @@ const AirpodsAdmin = () => {
                   <label>Modelo</label>
                   <select
                     value={formData.model}
-                    onChange={(e) => setFormData({...formData, model: e.target.value})}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage('airpods', newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
                   >
-                    <option value="airpods-pro">AirPods Pro</option>
-                    <option value="airpods-3">AirPods 3rd Generation</option>
-                    <option value="airpods-max">AirPods Max</option>
-                    <option value="airpods-2">AirPods 2nd Generation</option>
-                    <option value="airpods-se">AirPods SE</option>
+                    <option value="pro-2">AirPods Pro 2</option>
+                    <option value="3">AirPods 3</option>
+                    <option value="max">AirPods Max</option>
                   </select>
                 </div>
 
@@ -172,12 +177,15 @@ const AirpodsAdmin = () => {
                   <label>Tipo</label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage('airpods', formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
                   >
                     <option value="pro">Pro</option>
                     <option value="normal">Normal</option>
                     <option value="max">Max</option>
-                    <option value="se">SE</option>
                   </select>
                 </div>
 
@@ -186,7 +194,7 @@ const AirpodsAdmin = () => {
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({...formData, color: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     placeholder="Ej: White, Black"
                   />
                 </div>
@@ -195,7 +203,7 @@ const AirpodsAdmin = () => {
                   <label>Condición</label>
                   <select
                     value={formData.condition}
-                    onChange={(e) => setFormData({...formData, condition: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
                     <option value="like-new">Como Nuevo</option>
@@ -211,7 +219,7 @@ const AirpodsAdmin = () => {
                     min="0"
                     max="100"
                     value={formData.battery_health}
-                    onChange={(e) => setFormData({...formData, battery_health: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
                     placeholder="Ej: 90"
                   />
                 </div>
@@ -241,7 +249,7 @@ const AirpodsAdmin = () => {
                   <input
                     type="text"
                     value={formData.features}
-                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     placeholder="Ej: Active Noise Cancellation, Spatial Audio, Sweat Resistant"
                   />
                 </div>
@@ -253,7 +261,7 @@ const AirpodsAdmin = () => {
                     min="0"
                     max="12"
                     value={formData.warranty_months}
-                    onChange={(e) => setFormData({...formData, warranty_months: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, warranty_months: parseInt(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -261,7 +269,7 @@ const AirpodsAdmin = () => {
                   <label>Descripción</label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows="3"
                     placeholder="Describe los AirPods..."
                   />
@@ -272,7 +280,7 @@ const AirpodsAdmin = () => {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     placeholder="https://ejemplo.com/imagen.jpg"
                   />
                 </div>
@@ -282,7 +290,7 @@ const AirpodsAdmin = () => {
                     <input
                       type="checkbox"
                       checked={formData.available}
-                      onChange={(e) => setFormData({...formData, available: e.target.checked})}
+                      onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     />
                     Disponible
                   </label>
@@ -293,8 +301,8 @@ const AirpodsAdmin = () => {
                 <button type="submit" className="btn-save">
                   {editingProduct ? 'Actualizar' : 'Guardar'}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-cancel"
                   onClick={() => {
                     setShowForm(false);
@@ -333,13 +341,13 @@ const AirpodsAdmin = () => {
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(product)}
                   >
                     Editar
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(product.id)}
                   >
@@ -350,7 +358,7 @@ const AirpodsAdmin = () => {
             ))}
           </tbody>
         </table>
-        
+
         {products.length === 0 && (
           <div className="no-products">
             <p>No hay AirPods agregados aún</p>
@@ -359,8 +367,8 @@ const AirpodsAdmin = () => {
       </div>
 
       <div className="add-product-section">
-        <button 
-          className="btn-add-product" 
+        <button
+          className="btn-add-product"
           onClick={() => {
             setShowForm(true);
             setEditingProduct(null);

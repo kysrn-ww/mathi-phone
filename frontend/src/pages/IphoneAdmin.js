@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { getProductImage } from '../utils/productDefaults';
 
 const IphoneAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -23,7 +24,8 @@ const IphoneAdmin = () => {
     available: true,
     warranty_months: 6,
     description: '',
-    image_url: ''
+    image_url: getProductImage('iphone', '16', 'pro-max'),
+    category: 'iphone'
   });
 
   useEffect(() => {
@@ -32,9 +34,8 @@ const IphoneAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await api.getProducts();
+      const data = await api.getProducts({ category: 'iphone' });
       setProducts(data);
-      setFilteredProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -51,7 +52,7 @@ const IphoneAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    setFormData({...formData, [field]: formattedValue});
+    setFormData({ ...formData, [field]: formattedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -128,7 +129,7 @@ const IphoneAdmin = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setFormData({...formData, image_url: data.image_url});
+          setFormData({ ...formData, image_url: data.image_url });
           alert('Imagen subida exitosamente');
         } else {
           throw new Error('Error al subir la imagen');
@@ -158,7 +159,8 @@ const IphoneAdmin = () => {
       available: true,
       warranty_months: 6,
       description: '',
-      image_url: ''
+      image_url: getProductImage('iphone', '16', 'pro-max'),
+      category: 'iphone'
     });
   };
 
@@ -188,7 +190,7 @@ const IphoneAdmin = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ej: iPhone 16 Pro Max"
                   />
                 </div>
@@ -197,7 +199,11 @@ const IphoneAdmin = () => {
                   <label>Modelo</label>
                   <select
                     value={formData.model}
-                    onChange={(e) => setFormData({...formData, model: e.target.value})}
+                    onChange={(e) => {
+                      const newModel = e.target.value;
+                      const newImage = getProductImage('iphone', newModel, formData.type);
+                      setFormData({ ...formData, model: newModel, image_url: newImage });
+                    }}
                   >
                     <option value="11">iPhone 11</option>
                     <option value="12">iPhone 12</option>
@@ -214,7 +220,11 @@ const IphoneAdmin = () => {
                   <label>Tipo</label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      const newImage = getProductImage('iphone', formData.model, newType);
+                      setFormData({ ...formData, type: newType, image_url: newImage });
+                    }}
                   >
                     <option value="normal">Normal</option>
                     <option value="mini">Mini</option>
@@ -229,7 +239,7 @@ const IphoneAdmin = () => {
                   <label>Almacenamiento</label>
                   <select
                     value={formData.storage}
-                    onChange={(e) => setFormData({...formData, storage: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
                   >
                     <option value="64GB">64GB</option>
                     <option value="128GB">128GB</option>
@@ -244,7 +254,7 @@ const IphoneAdmin = () => {
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({...formData, color: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                     placeholder="Ej: Plateado, Negro, Azul"
                   />
                 </div>
@@ -253,7 +263,7 @@ const IphoneAdmin = () => {
                   <label>Condición</label>
                   <select
                     value={formData.condition}
-                    onChange={(e) => setFormData({...formData, condition: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   >
                     <option value="sealed">Sellado</option>
                     <option value="like-new">Como Nuevo</option>
@@ -269,7 +279,7 @@ const IphoneAdmin = () => {
                     min="0"
                     max="100"
                     value={formData.battery_health}
-                    onChange={(e) => setFormData({...formData, battery_health: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, battery_health: parseInt(e.target.value) || 0 })}
                     placeholder="Ej: 90"
                   />
                 </div>
@@ -299,7 +309,7 @@ const IphoneAdmin = () => {
                   <input
                     type="text"
                     value={formData.screen_size}
-                    onChange={(e) => setFormData({...formData, screen_size: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, screen_size: e.target.value })}
                     placeholder="Ej: 6.7 Super Retina XDR"
                   />
                 </div>
@@ -309,7 +319,7 @@ const IphoneAdmin = () => {
                   <input
                     type="text"
                     value={formData.chip}
-                    onChange={(e) => setFormData({...formData, chip: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, chip: e.target.value })}
                     placeholder="Ej: A18 Pro"
                   />
                 </div>
@@ -319,7 +329,7 @@ const IphoneAdmin = () => {
                   <input
                     type="text"
                     value={formData.camera}
-                    onChange={(e) => setFormData({...formData, camera: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, camera: e.target.value })}
                     placeholder="Ej: 48MP Principal + 12MP Ultra Gran Angular"
                   />
                 </div>
@@ -329,7 +339,7 @@ const IphoneAdmin = () => {
                   <input
                     type="text"
                     value={formData.features}
-                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     placeholder="Ej: 5G, ProMotion 120Hz, Dynamic Island"
                   />
                 </div>
@@ -341,7 +351,7 @@ const IphoneAdmin = () => {
                     min="0"
                     max="12"
                     value={formData.warranty_months}
-                    onChange={(e) => setFormData({...formData, warranty_months: parseInt(e.target.value) || 0})}
+                    onChange={(e) => setFormData({ ...formData, warranty_months: parseInt(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -349,7 +359,7 @@ const IphoneAdmin = () => {
                   <label>Descripción</label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows="3"
                     placeholder="Describe el iPhone..."
                   />
@@ -376,16 +386,16 @@ const IphoneAdmin = () => {
                       <input
                         type="url"
                         value={formData.image_url}
-                        onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                         placeholder="O pegar URL de imagen"
                         className="url-input"
                       />
                     </div>
                     {formData.image_url && (
                       <div className="image-preview">
-                        <img 
-                          src={formData.image_url} 
-                          alt="Vista previa" 
+                        <img
+                          src={formData.image_url}
+                          alt="Vista previa"
                           onError={(e) => {
                             e.target.style.display = 'none';
                             e.target.nextSibling.style.display = 'block';
@@ -404,7 +414,7 @@ const IphoneAdmin = () => {
                     <input
                       type="checkbox"
                       checked={formData.available}
-                      onChange={(e) => setFormData({...formData, available: e.target.checked})}
+                      onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     />
                     Disponible
                   </label>
@@ -415,8 +425,8 @@ const IphoneAdmin = () => {
                 <button type="submit" className="btn-save">
                   {editingProduct ? 'Actualizar' : 'Guardar'}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-cancel"
                   onClick={() => {
                     setShowForm(false);
@@ -455,13 +465,13 @@ const IphoneAdmin = () => {
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(product)}
                   >
                     Editar
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(product.id)}
                   >
@@ -472,7 +482,7 @@ const IphoneAdmin = () => {
             ))}
           </tbody>
         </table>
-        
+
         {products.length === 0 && (
           <div className="no-products">
             <p>No hay iPhones agregados aún</p>
@@ -481,8 +491,8 @@ const IphoneAdmin = () => {
       </div>
 
       <div className="add-product-section">
-        <button 
-          className="btn-add-product" 
+        <button
+          className="btn-add-product"
           onClick={() => {
             setShowForm(true);
             setEditingProduct(null);
