@@ -1,11 +1,12 @@
 services:
   # Backend API Service
   - type: web
-    name: mathi-phone-api
-    env: docker
+    name: mathi-api
+    env: python
     plan: free
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt && chmod +x start.sh"
+    startCommand: "./start.sh"
     envVars:
       - key: MONGO_URL
         sync: false
@@ -13,7 +14,10 @@ services:
         value: mathi_phone
         sync: false
       - key: CORS_ORIGINS
-        value: https://mathi-phone-api.onrender.com,https://mathi-phone.onrender.com
+        value: https://mathi-api.onrender.com,https://mathi-phone.onrender.com
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
         sync: false
     autoDeploy: true
 
@@ -27,13 +31,13 @@ services:
     publishPath: build
     envVars:
       - key: REACT_APP_BACKEND_URL
-        value: https://mathi-phone-api.onrender.com
+        value: https://mathi-api.onrender.com
         sync: false
     autoDeploy: true
     routes:
       - type: rewrite
         source: /api/*
-        destination: https://mathi-phone-api.onrender.com/api/*
+        destination: https://mathi-api.onrender.com/api/*
     headers:
       - path: /*
         name: X-Frame-Options
