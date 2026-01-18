@@ -1,0 +1,42 @@
+services:
+  # Backend API Service
+  - type: web
+    name: mathi-phone-api
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python -m uvicorn server:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: mathi_phone
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://mathi-phone-api.onrender.com,https://mathi-phone.onrender.com
+        sync: false
+    autoDeploy: true
+
+  # Frontend Service
+  - type: web
+    name: mathi-phone
+    env: static
+    plan: free
+    buildCommand: "cd frontend && npm install && npm run build"
+    publishPath: frontend/build
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        value: https://mathi-phone-api.onrender.com
+        sync: false
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://mathi-phone-api.onrender.com/api/*
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "f9985f02-b523-4094-9143-6179e96c53e4",
+    "name": "iPhone 16 Pro Max",
+    "model": "16",
+    "type": "pro-max",
+    "storage": "256GB",
+    "color": "Plateado",
+    "condition": "excellent",
+    "battery_health": 90,
+    "price_ars": 1500000.0,
+    "price_usd": 1500.0,
+    "screen_size": "6.7\" Super Retina XDR",
+    "chip": "A18 Pro",
+    "camera": "48MP Principal + 12MP Ultra Gran Angular + 12MP Teleobjetivo",
+    "features": [
+      "5G",
+      "ProMotion 120Hz",
+      "Dynamic Island",
+      "Action Button",
+      "Titanium"
+    ],
+    "available": true,
+    "warranty_months": 6,
+    "description": "iPhone 16 Pro Max en color plateado con 90% de batería. Excelente estado, cámara profesional y chip A18 Pro de última generación.",
+    "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-16-pro-max-finish-select-202409-6-7inch-silver?wid=5120&hei=2880",
+    "created_at": "2026-01-17T09:11:35.250090+00:00",
+    "updated_at": "2026-01-17T09:11:35.250097+00:00"
+  }
+]

@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mathiphone_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: mathi_phone
+    volumes:
+      - mongodb_data:/data/db
+      - ./backend/migrate_to_mongodb.js:/docker-entrypoint-initdb.d/migrate.js:ro
+    networks:
+      - mathiphone_network
+
+  backend:
+    build: .
+    container_name: mathiphone_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URL: "mongodb://admin:password123@mongodb:27017"
+      DB_NAME: "mathi_phone"
+      CORS_ORIGINS: "http://localhost:3000,https://yourdomain.com"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+    networks:
+      - mathiphone_network
+
+  frontend:
+    image: nginx:alpine
+    container_name: mathiphone_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    networks:
+      - mathiphone_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  mathiphone_network:
+    driver: bridge
