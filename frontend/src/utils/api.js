@@ -28,11 +28,17 @@ const axiosInstance = axios.create({
   }
 });
 
-// Agregar interceptor para logging
+// Agregar interceptor para logging y token
 axiosInstance.interceptors.request.use(
   (config) => {
     console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
     console.log('Backend URL:', BACKEND_URL);
+
+    const token = localStorage.getItem('admin_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
   },
   (error) => {
@@ -107,6 +113,11 @@ export const api = {
 
   updateExchangeRates: async (rates) => {
     const response = await axiosInstance.post('/exchange-rates', rates);
+    return response.data;
+  },
+
+  login: async (username, password) => {
+    const response = await axiosInstance.post('/login', { username, password });
     return response.data;
   }
 };

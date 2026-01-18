@@ -10,6 +10,9 @@ import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any
+import jwt
+from datetime import datetime, timedelta, timezone
+import requests
 import uuid
 from datetime import datetime, timezone
 import asyncio
@@ -115,6 +118,7 @@ class ProductUpdate(BaseModel):
     battery_health: Optional[int] = None
     price_ars: Optional[float] = None
     price_usd: Optional[float] = None
+    price_currency: Optional[str] = None
     screen_size: Optional[str] = None
     chip: Optional[str] = None
     camera: Optional[str] = None
@@ -124,6 +128,21 @@ class ProductUpdate(BaseModel):
     description: Optional[str] = None
     image_url: Optional[str] = None
     category: Optional[str] = None
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+# JWT Settings
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "mathi-phone-secret-key-2024")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 # 24 hours
+
+USERS_URL = "https://raw.githubusercontent.com/kysrn-ww/mog/main/users.json"
 
 
 # Exchange Rate Models
@@ -318,6 +337,41 @@ async def get_exchange_rates():
             btc=1/50000,
             eth=1/3000
         )
+
+@api_router.post("/login", response_model=Token)
+async def login(request: LoginRequest):
+    try:
+        response = requests.get(USERS_URL)
+        response.raise_for_status()
+        users = response.json()
+        
+        user = next((u for u in users if u["username"] == request.username and u["password"] == request.password), None)
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Credenciales inválidas")
+        
+        if not user.get("isActive", True):
+            raise HTTPException(status_code=403, detail="Usuario inactivo")
+            
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user["username"]}, expires_delta=access_token_expires
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 @api_router.post("/exchange-rates")
 async def update_exchange_rates(rates: Dict[str, float]):

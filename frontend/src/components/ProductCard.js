@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCompare } from '../contexts/CompareContext';
 import { useNavigate } from 'react-router-dom';
+import { HardDrive, Palette, Cpu, Smartphone, Laptop, Watch, Headphones, Tablet, Zap, MessageCircle, RefreshCw } from 'lucide-react';
 
 const ProductCard = ({ product }) => {
   const { addToCompare } = useCompare();
@@ -41,11 +42,11 @@ const ProductCard = ({ product }) => {
           <img src={product.image_url} alt={product.name} loading="lazy" />
         ) : (
           <div className="product-icon">
-            {product.category === 'macbook' ? '💻' :
-              product.category === 'watch' ? '⌚' :
-                product.category === 'airpods' ? '🎧' :
-                  product.category === 'ipad' ? '📱' :
-                    product.category === 'accesorio' ? '🔌' : '📱'}
+            {product.category === 'macbook' ? <Laptop size={48} /> :
+              product.category === 'watch' ? <Watch size={48} /> :
+                product.category === 'airpods' ? <Headphones size={48} /> :
+                  product.category === 'ipad' ? <Tablet size={48} /> :
+                    product.category === 'accesorio' ? <Zap size={48} /> : <Smartphone size={48} />}
           </div>
         )}
 
@@ -63,8 +64,8 @@ const ProductCard = ({ product }) => {
         <h3 className="product-name" data-testid="product-name">{product.name}</h3>
 
         <div className="product-specs">
-          <span>💾 {product.storage}</span>
-          <span>🎨 {product.color}</span>
+          <span><HardDrive size={14} /> {product.storage}</span>
+          <span><Palette size={14} /> {product.color}</span>
         </div>
 
         <p className="product-description">{product.screen_size} • {product.chip}</p>
@@ -103,11 +104,12 @@ const ProductCard = ({ product }) => {
               className="btn-compare"
               onClick={handleAddToCompare}
               data-testid="btn-add-to-compare"
+              title="Comparar"
             >
-              🔄
+              <RefreshCw size={18} />
             </button>
             <button className="btn-contact" data-testid="btn-contact">
-              💬 Consultar
+              <MessageCircle size={18} /> Consultar
             </button>
           </div>
         </div>

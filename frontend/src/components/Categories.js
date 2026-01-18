@@ -1,40 +1,41 @@
 import React from 'react';
+import { Smartphone, Laptop, Watch, Headphones, Tablet, Zap } from 'lucide-react';
 
 const Categories = ({ onCategorySelect }) => {
   const categories = [
     {
       id: 'iphone',
-      icon: '📱',
+      icon: <Smartphone size={40} />,
       title: 'iPhones',
       description: 'Desde el iPhone 11 hasta el iPhone 17 Pro Max. Encuentra el modelo perfecto para ti con filtros avanzados.'
     },
     {
       id: 'macbook',
-      icon: '💻',
+      icon: <Laptop size={40} />,
       title: 'MacBooks',
       description: 'MacBook Air y Pro con chips M3. Potencia y portabilidad en su máxima expresión.'
     },
     {
       id: 'watch',
-      icon: '⌚',
+      icon: <Watch size={40} />,
       title: 'Apple Watch',
       description: 'Series 9, SE y Ultra. Tu salud y fitness en tu muñeca.'
     },
     {
       id: 'airpods',
-      icon: '🎧',
+      icon: <Headphones size={40} />,
       title: 'AirPods',
       description: 'AirPods Pro 2, AirPods 3 y AirPods Max. Audio excepcional.'
     },
     {
       id: 'ipad',
-      icon: '📱',
+      icon: <Tablet size={40} />,
       title: 'iPads',
       description: 'iPad Pro, Air y mini. Creatividad y productividad sin límites.'
     },
     {
       id: 'accesorio',
-      icon: '🔌',
+      icon: <Zap size={40} />,
       title: 'Accesorios',
       description: 'Cables, cargadores, fundas y más. Complementos esenciales.'
     }
