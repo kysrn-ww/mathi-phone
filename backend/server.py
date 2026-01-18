@@ -319,15 +319,22 @@ async def get_exchange_rates():
 
 
 # Add CORS middleware BEFORE routes
+cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
+cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
+
+# Default origins if environment variable is not set
+if not cors_origins:
+    cors_origins = [
+        "http://localhost:3000",
+        "http://localhost:8001",
+        "https://mathi-phone.onrender.com",
+        "https://mathi-api.onrender.com"
+    ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:8001", 
-        "https://tienda.onrender.com",
-        "https://tienda-api.onrender.com"
-    ],
+    allow_origins=cors_origins,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
