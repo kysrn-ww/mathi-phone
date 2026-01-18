@@ -2,11 +2,10 @@ services:
   # Backend API Service
   - type: web
     name: mathi-phone-api
-    env: python
+    env: docker
     plan: free
-    rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python start_server.py"
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: MONGO_URL
         sync: false
@@ -15,9 +14,6 @@ services:
         sync: false
       - key: CORS_ORIGINS
         value: https://mathi-phone-api.onrender.com,https://mathi-phone.onrender.com
-        sync: false
-      - key: PYTHONUNBUFFERED
-        value: "1"
         sync: false
     autoDeploy: true
 
