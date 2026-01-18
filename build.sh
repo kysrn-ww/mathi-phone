@@ -12,6 +12,7 @@ pip install -r requirements.txt
 echo "🏗️ Construyendo frontend..."
 cd frontend
 npm install --legacy-peer-deps
+export CI=false
 npm run build
 cd ..
 
