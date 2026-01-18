@@ -13,6 +13,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
+    category: 'all',
     model: 'all',
     type: 'all',
     condition: 'all',
@@ -49,6 +50,11 @@ const Home = () => {
 
   const applyFilters = () => {
     let filtered = [...products];
+
+    // Apply category filter
+    if (filters.category !== 'all') {
+      filtered = filtered.filter(p => p.category === filters.category);
+    }
 
     // Apply model filter
     if (filters.model !== 'all') {
@@ -107,16 +113,16 @@ const Home = () => {
   return (
     <div className="home-page" data-testid="home-page">
       <Hero />
-      <Categories />
-      <SearchBar 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+      <Categories onCategorySelect={(cat) => setFilters(prev => ({ ...prev, category: cat, model: 'all', type: 'all' }))} />
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
-      <FilterSection 
-        filters={filters} 
-        setFilters={setFilters} 
+      <FilterSection
+        filters={filters}
+        onFilterChange={handleFilterChange}
       />
-      
+
       <section className="catalog-section" id="catalog" data-testid="catalog-section">
         <div className="catalog-container">
           <div className="catalog-header">
@@ -136,7 +142,7 @@ const Home = () => {
               <div className="products-count" data-testid="products-count">
                 {filteredProducts.length} {filteredProducts.length === 1 ? 'producto encontrado' : 'productos encontrados'}
               </div>
-              
+
               <div className="products-grid" data-testid="products-grid">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map(product => (
@@ -148,10 +154,11 @@ const Home = () => {
                     <p>Debug: Products array length: {products.length}</p>
                     <p>Debug: Filtered products length: {filteredProducts.length}</p>
                     <p>Debug: Loading state: {loading.toString()}</p>
-                    <button 
-                      className="btn-reset-filters" 
+                    <button
+                      className="btn-reset-filters"
                       onClick={() => {
                         setFilters({
+                          category: 'all',
                           model: 'all',
                           type: 'all',
                           condition: 'all',

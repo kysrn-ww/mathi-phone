@@ -40,20 +40,28 @@ const ProductCard = ({ product }) => {
         {product.image_url ? (
           <img src={product.image_url} alt={product.name} loading="lazy" />
         ) : (
-          <div className="product-icon">📱</div>
+          <div className="product-icon">
+            {product.category === 'macbook' ? '💻' :
+              product.category === 'watch' ? '⌚' :
+                product.category === 'airpods' ? '🎧' :
+                  product.category === 'ipad' ? '📱' :
+                    product.category === 'accesorio' ? '🔌' : '📱'}
+          </div>
         )}
-        
+
         <div className="product-badges">
           <span className={`badge ${conditionBadge.class}`}>{conditionBadge.text}</span>
-          <span className={`badge badge-battery ${getBatteryColor(product.battery_health)}`}>
-            {product.battery_health}% Batería
-          </span>
+          {product.category !== 'accesorio' && (
+            <span className={`badge badge-battery ${getBatteryColor(product.battery_health)}`}>
+              {product.battery_health}% Batería
+            </span>
+          )}
         </div>
       </div>
 
       <div className="product-info">
         <h3 className="product-name" data-testid="product-name">{product.name}</h3>
-        
+
         <div className="product-specs">
           <span>💾 {product.storage}</span>
           <span>🎨 {product.color}</span>
@@ -78,8 +86,8 @@ const ProductCard = ({ product }) => {
           </div>
 
           <div className="product-actions">
-            <button 
-              className="btn-compare" 
+            <button
+              className="btn-compare"
               onClick={handleAddToCompare}
               data-testid="btn-add-to-compare"
             >
