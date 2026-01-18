@@ -188,6 +188,43 @@
   width: auto;
 }
 
+.currency-toggle-group {
+  display: flex;
+  gap: 0;
+  margin-bottom: 8px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.btn-currency {
+  background: var(--bg-dark);
+  color: var(--text-secondary);
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-currency.active {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.btn-currency:not(.active):hover {
+  background: var(--bg-hover);
+}
+
+.price-conversion {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
 .form-actions {
   display: flex;
   gap: var(--spacing-md);

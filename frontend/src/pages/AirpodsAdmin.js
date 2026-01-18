@@ -18,6 +18,7 @@ const AirpodsAdmin = () => {
     battery_health: 90,
     price_ars: '',
     price_usd: '',
+    price_currency: 'USD',
     screen_size: '',
     chip: '',
     camera: '',
@@ -139,6 +140,7 @@ const AirpodsAdmin = () => {
       battery_health: 90,
       price_ars: '',
       price_usd: '',
+      price_currency: 'USD',
       screen_size: '',
       chip: '',
       camera: '',
@@ -250,23 +252,34 @@ const AirpodsAdmin = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Precio ARS</label>
+                  <label>Precio</label>
+                  <div className="currency-toggle-group">
+                    <button
+                      type="button"
+                      className={`btn-currency ${formData.price_currency === 'USD' ? 'active' : ''}`}
+                      onClick={() => setFormData({ ...formData, price_currency: 'USD' })}
+                    >
+                      USD
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn-currency ${formData.price_currency === 'ARS' ? 'active' : ''}`}
+                      onClick={() => setFormData({ ...formData, price_currency: 'ARS' })}
+                    >
+                      ARS
+                    </button>
+                  </div>
                   <input
                     type="text"
-                    value={formData.price_ars}
-                    onChange={(e) => handlePriceChange('price_ars', e.target.value)}
-                    placeholder="Ej: 400.000"
+                    value={formData.price_currency === 'USD' ? formData.price_usd : formData.price_ars}
+                    onChange={(e) => handlePriceChange(formData.price_currency === 'USD' ? 'price_usd' : 'price_ars', e.target.value)}
+                    placeholder={formData.price_currency === 'USD' ? "Ej: 1.500" : "Ej: 1.500.000"}
                   />
-                </div>
-
-                <div className="form-group">
-                  <label>Precio USD</label>
-                  <input
-                    type="text"
-                    value={formData.price_usd}
-                    onChange={(e) => handlePriceChange('price_usd', e.target.value)}
-                    placeholder="Ej: 400"
-                  />
+                  <p className="price-conversion">
+                    {formData.price_currency === 'USD'
+                      ? `≈ $${formData.price_ars} ARS`
+                      : `≈ $${formData.price_usd} USD`}
+                  </p>
                 </div>
 
                 <div className="form-group">

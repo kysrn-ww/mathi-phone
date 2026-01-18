@@ -126,7 +126,7 @@ const Home = () => {
       <Categories onCategorySelect={(cat) => setFilters(prev => ({ ...prev, category: cat, model: 'all', type: 'all' }))} />
       <SearchBar
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        onSearchChange={setSearchQuery}
       />
       <FilterSection
         filters={filters}
