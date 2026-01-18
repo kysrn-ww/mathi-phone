@@ -378,26 +378,24 @@
   line-height: 1.4;
 }
 
-.image-upload-section {
+.image-upload-group {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 10px;
+  align-items: center;
 }
 
-.image-upload-buttons {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  flex-wrap: wrap;
+.image-upload-group input[type="url"] {
+  flex: 1;
 }
 
 .btn-upload {
   background: var(--accent-primary);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: var(--transition-fast);
   white-space: nowrap;

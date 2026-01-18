@@ -119,21 +119,9 @@ const IphoneAdmin = () => {
       }
 
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch('http://localhost:8001/api/upload-image', {
-          method: 'POST',
-          body: formData
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFormData({ ...formData, image_url: data.image_url });
-          alert('Imagen subida exitosamente');
-        } else {
-          throw new Error('Error al subir la imagen');
-        }
+        const imageUrl = await api.uploadImage(file);
+        setFormData({ ...formData, image_url: imageUrl });
+        alert('Imagen subida exitosamente');
       } catch (error) {
         console.error('Error uploading image:', error);
         alert('Error al subir la imagen: ' + error.message);

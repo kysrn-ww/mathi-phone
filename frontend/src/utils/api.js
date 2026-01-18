@@ -103,6 +103,23 @@ export const api = {
   getExchangeRates: async () => {
     const response = await axiosInstance.get('/exchange-rates');
     return response.data;
+  },
+
+  // Image upload
+  uploadImage: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch(`${API}/upload-image`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error('Error al subir la imagen');
+    const data = await response.json();
+    // Prepend BACKEND_URL if the image_url is relative
+    if (data.image_url.startsWith('/')) {
+      return `${BACKEND_URL}${data.image_url}`;
+    }
+    return data.image_url;
   }
 };
 
