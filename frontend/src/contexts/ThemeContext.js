@@ -11,24 +11,19 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved ? saved === 'dark' : true; // Default to dark
+  const [showSnow, setShowSnow] = useState(() => {
+    const saved = localStorage.getItem('showSnow');
+    return saved ? saved === 'true' : true; // Default to true
   });
 
   useEffect(() => {
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
+    localStorage.setItem('showSnow', showSnow);
+  }, [showSnow]);
 
-  const toggleTheme = () => setIsDark(!isDark);
+  const toggleSnow = () => setShowSnow(!showSnow);
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+    <ThemeContext.Provider value={{ showSnow, toggleSnow }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -12,18 +12,26 @@ const Hero = () => {
     <section className="hero" id="hero" data-testid="hero-section">
       <div className="hero-content">
         <h1 className="hero-title" data-testid="hero-title">Mathi Phone</h1>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=Av+presidente+castillo"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hero-location"
+        >
+          📍 Av. Presidente Castillo
+        </a>
         <p className="hero-subtitle" data-testid="hero-subtitle">
           Tu tienda Apple premium. Descubre la colección completa de dispositivos con la mejor calidad y precio.
         </p>
-        <button 
-          className="cta-button" 
+        <button
+          className="cta-button"
           onClick={scrollToCatalog}
           data-testid="hero-cta-button"
         >
           Explorar Productos
         </button>
       </div>
-      
+
       <div className="hero-gradient"></div>
     </section>
   );

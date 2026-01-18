@@ -778,6 +778,22 @@ body {
   }
 }
 
+.hero-location {
+  display: inline-block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  transition: var(--transition-fast);
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.hero-location:hover {
+  color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
 .hero-subtitle {
   font-size: clamp(1rem, 2vw, 1.5rem);
   color: var(--text-secondary);

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useCompare } from '../contexts/CompareContext';
 import { useNavigate } from 'react-router-dom';
+import { Snowflake } from 'lucide-react';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isDark, toggleTheme } = useTheme();
+  const { showSnow, toggleSnow } = useTheme();
   const { compareList } = useCompare();
   const navigate = useNavigate();
 
@@ -30,17 +31,17 @@ const Header = () => {
     <header className={`header ${scrolled ? 'scrolled' : ''}`} data-testid="main-header">
       <nav className="nav-container">
         <div className="logo" onClick={() => navigate('/')} data-testid="logo">
-           Mathi Phone
+          Mathi Phone
         </div>
-        
+
         <ul className={`nav-links ${menuOpen ? 'active' : ''}`} data-testid="nav-links">
           <li><button onClick={() => scrollToSection('hero')} data-testid="nav-home">Inicio</button></li>
           <li><button onClick={() => scrollToSection('categories')} data-testid="nav-categories">Categorías</button></li>
           <li><button onClick={() => scrollToSection('catalog')} data-testid="nav-catalog">Productos</button></li>
           <li><button onClick={() => scrollToSection('contact')} data-testid="nav-contact">Contacto</button></li>
           <li>
-            <button 
-              onClick={() => navigate('/compare')} 
+            <button
+              onClick={() => navigate('/compare')}
               className="compare-btn"
               data-testid="nav-compare-btn"
             >
@@ -50,17 +51,18 @@ const Header = () => {
         </ul>
 
         <div className="header-actions">
-          <button 
-            className="theme-toggle" 
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
+          <button
+            className={`theme-toggle ${showSnow ? 'active' : ''}`}
+            onClick={toggleSnow}
+            aria-label="Toggle snow"
             data-testid="theme-toggle-btn"
+            title={showSnow ? "Desactivar nieve" : "Activar nieve"}
           >
-            {isDark ? '☀️' : '🌙'}
+            <Snowflake size={20} color={showSnow ? "#0071e3" : "#86868b"} />
           </button>
-          
-          <div 
-            className={`menu-toggle ${menuOpen ? 'active' : ''}`} 
+
+          <div
+            className={`menu-toggle ${menuOpen ? 'active' : ''}`}
             onClick={() => setMenuOpen(!menuOpen)}
             data-testid="menu-toggle"
           >

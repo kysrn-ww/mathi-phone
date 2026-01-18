@@ -1,8 +1,12 @@
 import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import './SnowEffect.css';
 
 const SnowEffect = () => {
+    const { showSnow } = useTheme();
     const snowflakes = Array.from({ length: 50 });
+
+    if (!showSnow) return null;
 
     return (
         <div className="snow-container" aria-hidden="true">
