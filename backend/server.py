@@ -67,8 +67,8 @@ class Product(BaseModel):
     type: str  # pro-max, pro, plus, normal, mini, se
     storage: str  # 64GB, 128GB, 256GB, 512GB, 1TB
     color: str
-    condition: str  # sealed, like-new, excellent, good
-    battery_health: int  # 0-100
+    condition: str = "excellent"  # sealed, like-new, excellent, good
+    battery_health: int = 100  # 0-100
     price_ars: float
     price_usd: float
     price_currency: str = "USD"
