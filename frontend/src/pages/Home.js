@@ -94,13 +94,23 @@ const Home = () => {
     // Apply search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.model.toLowerCase().includes(query) ||
-        p.color.toLowerCase().includes(query) ||
-        p.chip.toLowerCase().includes(query) ||
-        p.storage.toLowerCase().includes(query)
-      );
+      filtered = filtered.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const model = (p.model || '').toLowerCase();
+        const color = (p.color || '').toLowerCase();
+        const chip = (p.chip || '').toLowerCase();
+        const storage = (p.storage || '').toLowerCase();
+        const category = (p.category || '').toLowerCase();
+        const description = (p.description || '').toLowerCase();
+
+        return name.includes(query) ||
+          model.includes(query) ||
+          color.includes(query) ||
+          chip.includes(query) ||
+          storage.includes(query) ||
+          category.includes(query) ||
+          description.includes(query);
+      });
     }
 
     setFilteredProducts(filtered);

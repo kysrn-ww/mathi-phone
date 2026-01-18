@@ -15,6 +15,7 @@ import AppleWatchAdmin from './pages/AppleWatchAdmin';
 import AirpodsAdmin from './pages/AirpodsAdmin';
 import IpadAdmin from './pages/IpadAdmin';
 import AccesoriosAdmin from './pages/AccesoriosAdmin';
+import ExchangeRateAdmin from './pages/ExchangeRateAdmin';
 import './App.css';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/admin/airpods" element={<AirpodsAdmin />} />
                 <Route path="/admin/ipads" element={<IpadAdmin />} />
                 <Route path="/admin/accesorios" element={<AccesoriosAdmin />} />
+                <Route path="/admin/exchange-rates" element={<ExchangeRateAdmin />} />
               </Routes>
             </main>
             <Footer />

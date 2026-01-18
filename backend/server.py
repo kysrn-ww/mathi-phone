@@ -317,6 +317,19 @@ async def get_exchange_rates():
             eth=1/3000
         )
 
+@api_router.post("/exchange-rates")
+async def update_exchange_rates(rates: Dict[str, float]):
+    """Update exchange rates in MongoDB database"""
+    try:
+        # El formato esperado es {"USD": 1.0, "ARS": 1000.0, ...}
+        success = await db.update_exchange_rates(rates)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to update exchange rates")
+        return {"message": "Exchange rates updated successfully"}
+    except Exception as e:
+        logger.error(f"Error updating exchange rates: {e}")
+        raise HTTPException(status_code=500, detail="Error updating exchange rates")
+
 
 # Add CORS middleware BEFORE routes
 app.add_middleware(
@@ -325,8 +338,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:8001", 
-        "https://tienda.onrender.com",
-        "https://tienda-api.onrender.com"
+        "https://mathi-phone.onrender.com",
+        "https://mathi-phone-api.onrender.com"
     ],
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],

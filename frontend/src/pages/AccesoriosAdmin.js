@@ -7,6 +7,7 @@ const AccesoriosAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(1000);
   const [formData, setFormData] = useState({
     name: '',
     model: 'pencil',
@@ -29,7 +30,17 @@ const AccesoriosAdmin = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchExchangeRate();
   }, []);
+
+  const fetchExchangeRate = async () => {
+    try {
+      const data = await api.getExchangeRates();
+      setExchangeRate(data.ars || 1000);
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
@@ -51,7 +62,21 @@ const AccesoriosAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    setFormData({ ...formData, [field]: formattedValue });
+
+    const newFormData = { ...formData, [field]: formattedValue };
+
+    // Auto-calculate logic
+    if (field === 'price_usd' && cleanValue) {
+      const usd = parseFloat(cleanValue);
+      const ars = Math.round(usd * exchangeRate);
+      newFormData.price_ars = formatPrice(ars.toString());
+    } else if (field === 'price_ars' && cleanValue) {
+      const ars = parseFloat(cleanValue);
+      const usd = Math.round(ars / exchangeRate);
+      newFormData.price_usd = formatPrice(usd.toString());
+    }
+
+    setFormData(newFormData);
   };
 
   const handleSubmit = async (e) => {

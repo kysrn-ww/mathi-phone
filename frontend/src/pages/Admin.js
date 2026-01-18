@@ -7,6 +7,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(1000);
   const [formData, setFormData] = useState({
     name: '',
     model: '16',
@@ -30,7 +31,17 @@ const Admin = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchExchangeRate();
   }, []);
+
+  const fetchExchangeRate = async () => {
+    try {
+      const data = await api.getExchangeRates();
+      setExchangeRate(data.ars || 1000);
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
@@ -108,7 +119,21 @@ const Admin = () => {
     const cleanValue = value.replace(/[^\d]/g, '');
     // Format with dots
     const formattedValue = formatPrice(cleanValue);
-    setFormData({ ...formData, [field]: formattedValue });
+
+    const newFormData = { ...formData, [field]: formattedValue };
+
+    // Auto-calculate logic
+    if (field === 'price_usd' && cleanValue) {
+      const usd = parseFloat(cleanValue);
+      const ars = Math.round(usd * exchangeRate);
+      newFormData.price_ars = formatPrice(ars.toString());
+    } else if (field === 'price_ars' && cleanValue) {
+      const ars = parseFloat(cleanValue);
+      const usd = Math.round(ars / exchangeRate);
+      newFormData.price_usd = formatPrice(usd.toString());
+    }
+
+    setFormData(newFormData);
   };
 
   const resetForm = () => {
@@ -147,6 +172,11 @@ const Admin = () => {
     <div className="admin-container">
       <div className="admin-header">
         <h1>Panel de Administración Principal</h1>
+        <div className="admin-actions">
+          <a href="/admin/exchange-rates" className="btn-exchange">
+            💰 Gestionar Dólar (${exchangeRate})
+          </a>
+        </div>
       </div>
 
       <div className="admin-categories">

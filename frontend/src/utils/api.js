@@ -103,6 +103,11 @@ export const api = {
   getExchangeRates: async () => {
     const response = await axiosInstance.get('/exchange-rates');
     return response.data;
+  },
+
+  updateExchangeRates: async (rates) => {
+    const response = await axiosInstance.post('/exchange-rates', rates);
+    return response.data;
   }
 };
 
