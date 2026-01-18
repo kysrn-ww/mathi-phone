@@ -77,25 +77,12 @@ const ProductCard = ({ product }) => {
 
         <div className="product-footer">
           <div className="product-price-section">
-            {product.price_currency === 'ARS' ? (
-              <>
-                <div className="product-price" data-testid="product-price">
-                  ${product.price_ars.toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                </div>
-                <div className="product-price-usd">
-                  USD ${product.price_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="product-price" data-testid="product-price">
-                  USD ${product.price_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                </div>
-                <div className="product-price-usd">
-                  ARS ${product.price_ars.toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                </div>
-              </>
-            )}
+            <div className="product-price" data-testid="product-price">
+              ${product.price_ars.toLocaleString('es-AR', { maximumFractionDigits: 0 })}
+            </div>
+            <div className="product-price-usd">
+              USD ${product.price_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+            </div>
           </div>
 
           <div className="product-actions">
@@ -118,7 +105,7 @@ const ProductCard = ({ product }) => {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 };
 

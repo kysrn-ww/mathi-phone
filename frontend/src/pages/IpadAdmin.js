@@ -7,7 +7,6 @@ const IpadAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [exchangeRate, setExchangeRate] = useState(1000);
   const [formData, setFormData] = useState({
     name: '',
     model: 'pro',
@@ -26,25 +25,12 @@ const IpadAdmin = () => {
     warranty_months: 6,
     description: '',
     image_url: getProductImage('ipad', 'pro', 'pro'),
-    category: 'ipad',
-    price_currency: 'USD'
+    category: 'ipad'
   });
 
   useEffect(() => {
     fetchProducts();
-    fetchExchangeRate();
   }, []);
-
-  const fetchExchangeRate = async () => {
-    try {
-      const data = await api.getExchangeRates();
-      if (data && data.ars) {
-        setExchangeRate(data.ars);
-      }
-    } catch (error) {
-      console.error('Error fetching exchange rate:', error);
-    }
-  };
 
   const fetchProducts = async () => {
     try {
@@ -66,19 +52,7 @@ const IpadAdmin = () => {
   const handlePriceChange = (field, value) => {
     const cleanValue = value.replace(/[^\d]/g, '');
     const formattedValue = formatPrice(cleanValue);
-    const numericValue = parseFloat(cleanValue) || 0;
-
-    let newFormData = { ...formData, [field]: formattedValue };
-
-    if (field === 'price_usd' && formData.price_currency === 'USD') {
-      const calculatedArs = Math.round(numericValue * exchangeRate);
-      newFormData.price_ars = formatPrice(calculatedArs.toString());
-    } else if (field === 'price_ars' && formData.price_currency === 'ARS') {
-      const calculatedUsd = Math.round(numericValue / exchangeRate);
-      newFormData.price_usd = formatPrice(calculatedUsd.toString());
-    }
-
-    setFormData(newFormData);
+    setFormData({ ...formData, [field]: formattedValue });
   };
 
   const handleSubmit = async (e) => {
@@ -148,8 +122,7 @@ const IpadAdmin = () => {
       warranty_months: 6,
       description: '',
       image_url: getProductImage('ipad', 'pro', 'pro'),
-      category: 'ipad',
-      price_currency: 'USD'
+      category: 'ipad'
     });
   };
 
@@ -267,36 +240,23 @@ const IpadAdmin = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Moneda Principal</label>
-                  <div className="currency-toggle">
-                    <button
-                      type="button"
-                      className={`btn-toggle ${formData.price_currency === 'USD' ? 'active' : ''}`}
-                      onClick={() => setFormData({ ...formData, price_currency: 'USD' })}
-                    >
-                      USD
-                    </button>
-                    <button
-                      type="button"
-                      className={`btn-toggle ${formData.price_currency === 'ARS' ? 'active' : ''}`}
-                      onClick={() => setFormData({ ...formData, price_currency: 'ARS' })}
-                    >
-                      ARS
-                    </button>
-                  </div>
+                  <label>Precio ARS</label>
+                  <input
+                    type="text"
+                    value={formData.price_ars}
+                    onChange={(e) => handlePriceChange('price_ars', e.target.value)}
+                    placeholder="Ej: 1.200.000"
+                  />
                 </div>
 
                 <div className="form-group">
-                  <label>Precio {formData.price_currency}</label>
+                  <label>Precio USD</label>
                   <input
                     type="text"
-                    value={formData.price_currency === 'USD' ? formData.price_usd : formData.price_ars}
-                    onChange={(e) => handlePriceChange(formData.price_currency === 'USD' ? 'price_usd' : 'price_ars', e.target.value)}
-                    placeholder={`Ej: ${formData.price_currency === 'USD' ? '1.200' : '1.200.000'}`}
+                    value={formData.price_usd}
+                    onChange={(e) => handlePriceChange('price_usd', e.target.value)}
+                    placeholder="Ej: 1.200"
                   />
-                  <small className="price-hint">
-                    Equivalente: {formData.price_currency === 'USD' ? `ARS $${formData.price_ars}` : `USD $${formData.price_usd}`}
-                  </small>
                 </div>
 
                 <div className="form-group">
