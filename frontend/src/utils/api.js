@@ -2,11 +2,16 @@ import axios from 'axios';
 
 // Detectar automáticamente la URL del backend
 const getBackendUrl = () => {
+  // Si estamos en producción en Render, usar el mismo origen (despliegue unificado)
+  if (window.location.hostname.includes('onrender.com')) {
+    return window.location.origin;
+  }
+
   // Si hay configuración global (para ngrok)
   if (window.APP_CONFIG && window.APP_CONFIG.getBackendUrl) {
     return window.APP_CONFIG.getBackendUrl();
   }
-  
+
   // Fallback a variables de entorno
   return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 };
@@ -65,34 +70,34 @@ export const api = {
       }
     });
     const response = await axiosInstance.get(`/products?${params.toString()}`);
-    
+
     // Manejar el formato de respuesta del backend
     if (response.data && response.data.value) {
       return response.data.value;
     }
     return response.data;
   },
-  
+
   getProduct: async (id) => {
     const response = await axiosInstance.get(`/products/${id}`);
     return response.data;
   },
-  
+
   createProduct: async (product) => {
     const response = await axiosInstance.post('/products', product);
     return response.data;
   },
-  
+
   updateProduct: async (id, product) => {
     const response = await axiosInstance.put(`/products/${id}`, product);
     return response.data;
   },
-  
+
   deleteProduct: async (id) => {
     const response = await axiosInstance.delete(`/products/${id}`);
     return response.data;
   },
-  
+
   // Exchange rates
   getExchangeRates: async () => {
     const response = await axiosInstance.get('/exchange-rates');
