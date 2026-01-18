@@ -2013,3 +2013,54 @@ input:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
+
+/* ============================================
+   APPLE LOGO STYLES
+   ============================================ */
+.apple-logo-purple {
+  color: #bf5af2;
+  /* Premium Apple Purple */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  margin: 0 0.05em;
+  width: 0.85em;
+  height: 0.85em;
+  animation: appleEntrance 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(191, 90, 242, 0.3));
+}
+
+.hero-title .apple-logo-purple {
+  width: 0.8em;
+  height: 0.8em;
+  margin-top: -0.1em;
+}
+
+@keyframes appleEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-20deg) translateY(20px);
+    filter: blur(10px) brightness(1.5);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.1) rotate(5deg) translateY(-5px);
+    filter: blur(0) brightness(1.2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg) translateY(0);
+    filter: blur(0) brightness(1);
+  }
+}
+
+/* Ensure the logo container in header doesn't wrap */
+.logo {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
