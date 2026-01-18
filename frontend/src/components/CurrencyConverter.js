@@ -55,13 +55,13 @@ const CurrencyConverter = ({ basePrice }) => {
           </button>
         ))}
       </div>
-      
+
       <div className="converted-price" data-testid="converted-price">
         {formatCurrency(convertPrice(basePrice, rates, selectedCurrency), selectedCurrency)}
       </div>
-      
+
       <div className="exchange-info">
-        <small>ⓘ Tasas actualizadas: {new Date(rates.timestamp).toLocaleTimeString('es-AR')}</small>
+        <small>ⓘ Precios estimados: {new Date(rates.timestamp).toLocaleTimeString('es-AR')}</small>
       </div>
     </div>
   );

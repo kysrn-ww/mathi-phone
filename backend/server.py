@@ -71,6 +71,7 @@ class Product(BaseModel):
     battery_health: int  # 0-100
     price_ars: float
     price_usd: float
+    price_currency: str = "USD"
     screen_size: str
     chip: str
     camera: str
@@ -89,10 +90,9 @@ class ProductCreate(BaseModel):
     type: str
     storage: str
     color: str
-    condition: str
-    battery_health: int
     price_ars: float
     price_usd: float
+    price_currency: str = "USD"  # USD or ARS
     screen_size: str
     chip: str
     camera: str
@@ -113,6 +113,7 @@ class ProductUpdate(BaseModel):
     battery_health: Optional[int] = None
     price_ars: Optional[float] = None
     price_usd: Optional[float] = None
+    price_currency: Optional[str] = None
     screen_size: Optional[str] = None
     chip: Optional[str] = None
     camera: Optional[str] = None

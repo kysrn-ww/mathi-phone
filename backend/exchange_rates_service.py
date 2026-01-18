@@ -73,7 +73,7 @@ class ExchangeRatesService:
             success = await db.update_exchange_rates(rates_data)
             
             if success:
-                logger.info(f"✅ Tasas actualizadas: BTC={rates_data['BTC']:.8f}, ETH={rates_data['ETH']:.6f}, ARS={rates_data['ARS']:.2f}")
+                logger.info(f"✅ Precios estimados: BTC={rates_data['BTC']:.8f}, ETH={rates_data['ETH']:.6f}, ARS={rates_data['ARS']:.2f}")
             
             return success
             
