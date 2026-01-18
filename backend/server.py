@@ -93,6 +93,8 @@ class ProductCreate(BaseModel):
     price_ars: float
     price_usd: float
     price_currency: str = "USD"  # USD or ARS
+    condition: str = "excellent"
+    battery_health: int = 100
     screen_size: str
     chip: str
     camera: str
