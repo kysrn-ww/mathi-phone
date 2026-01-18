@@ -73,10 +73,15 @@ export const api = {
     const response = await axiosInstance.get(`/products?${params.toString()}`);
 
     // Manejar el formato de respuesta del backend
-    if (response.data && response.data.value) {
-      return response.data.value;
+    let products = [];
+    if (response.data) {
+      if (Array.isArray(response.data)) {
+        products = response.data;
+      } else if (response.data.value && Array.isArray(response.data.value)) {
+        products = response.data.value;
+      }
     }
-    return response.data;
+    return products;
   },
 
   getProduct: async (id) => {

@@ -359,7 +359,7 @@ const AccesoriosAdmin = () => {
                 <td>{product.name}</td>
                 <td>{product.type}</td>
                 <td>{product.color}</td>
-                <td>${product.price_ars.toLocaleString()}</td>
+                <td>${(product.price_ars || 0).toLocaleString()}</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
                   <button

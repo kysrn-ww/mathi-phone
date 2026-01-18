@@ -410,7 +410,7 @@ const AppleWatchAdmin = () => {
                 <td>{product.name}</td>
                 <td>{product.model}</td>
                 <td>{product.color}</td>
-                <td>${product.price_ars.toLocaleString()}</td>
+                <td>${(product.price_ars || 0).toLocaleString()}</td>
                 <td>{product.battery_health}%</td>
                 <td>{product.available ? '✅' : '❌'}</td>
                 <td>
