@@ -6,7 +6,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import ProgressBar from './components/ProgressBar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductDetail from './pages/ProductDetail';
@@ -30,7 +29,6 @@ function App() {
           <BrowserRouter>
             <div className="App" data-testid="app">
               <SnowEffect />
-              <ProgressBar />
               <Header />
               <main className="main-content">
                 <Routes>

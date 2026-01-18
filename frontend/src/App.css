@@ -555,6 +555,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 body {
@@ -575,19 +576,6 @@ body {
 
 .main-content {
   flex: 1;
-}
-
-/* ============================================
-   PROGRESS BAR
-   ============================================ */
-.progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-light));
-  z-index: 10000;
-  transition: width var(--transition-fast);
 }
 
 /* ============================================
