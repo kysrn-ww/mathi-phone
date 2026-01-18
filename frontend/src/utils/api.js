@@ -2,18 +2,31 @@ import axios from 'axios';
 
 // Detectar automáticamente la URL del backend
 const getBackendUrl = () => {
-  // Si estamos en producción en Render, usar el mismo origen (despliegue unificado)
-  if (window.location.hostname.includes('onrender.com')) {
+  const hostname = window.location.hostname;
+  const port = window.location.port;
+
+  // Si estamos en producción en Render
+  if (hostname.includes('onrender.com')) {
+    // Si es el servicio de frontend (mathi-phone), el backend está en mathi-api
+    if (hostname.includes('mathi-phone')) {
+      return 'https://mathi-api.onrender.com';
+    }
+    // En cualquier otro caso en render, usar el mismo origen
     return window.location.origin;
   }
 
-  // Si hay configuración global (para ngrok)
-  if (window.APP_CONFIG && window.APP_CONFIG.getBackendUrl) {
-    return window.APP_CONFIG.getBackendUrl();
+  // Si estamos en localhost
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:8001';
   }
 
-  // Fallback a variables de entorno
-  return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+  // Si estamos en ngrok
+  if (hostname.includes('ngrok') || hostname.includes('ngrok-free')) {
+    return 'http://localhost:8001';
+  }
+
+  // Fallback a variables de entorno o puerto 8001 en la misma IP
+  return process.env.REACT_APP_BACKEND_URL || `${window.location.protocol}//${hostname}:8001`;
 };
 
 const BACKEND_URL = getBackendUrl();
